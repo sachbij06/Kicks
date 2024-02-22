@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart Your Session</title>
+
+  <style>
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+/* Navigation */
+nav {
+  background-color: #1e1e1e;
+  overflow: hidden;
+  text-align: center;
+  padding: 20px 0;
+}
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 10px 20px;
+  transition: color 0.3s ease;
+}
+nav a:hover {
+  color: #aaaaaa;
+}
+
+/* Body Styles */
+body {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+h1 {
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+/* Button Styles */
+button {
+  background-color: #1a354b;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #181818;
+}
+input[type="submit"] {
+  background-color: #333;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+input[type="submit"]:hover {
+  background-color: #181818; 
+}
+
+/* Content Styles */
+.content {
+  padding: 20px;
+}
+
+/* Form Styles */
+form {
+  background-color: #212121;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+input[type="number"],
+input[type="text"],
+textarea {
+  width: calc(70% - 22px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  background-color: #333;
+  color: #ffffff;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #333; 
+}
+
+textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+canvas {
+  display: block;
+  margin: 20px auto;
+  border: 3px solid #000000;
+  border-radius: 10px;
+}
+
+input[type="date"] {
+  width: 145px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  background-color: #333;
+  color: #ffffff;
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+input[type="date"]:focus {
+  outline: none;
+  border-color: #ffffff;
+}
+
+
+</style>
+
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="visualization.html">Visualization</a>
+    <a href="charting.html">Charting</a>
+    <a href="stats.html">Statistics</a>
+  </nav>
+  
+  <div class="content">
+    <h1>Chart Your Session</h1></br>
+  
+    <form id="loopForm">
+      <label for="sessionKicks">Enter the number of kicks from your session <i><b>(we suggest having it on rolling film)</b></i>:</label>
+      <input type="number" id="sessionKicks" name="sessionKicks" required><br>
+      <label for="sessionDate">Session Date:</label>
+      <input type="date" id="sessionDate" name="sessionDate" required>
+      <div id="buttonContainer">
+        <input type="submit" id="nextButton" name="nextButton" value="Next">
+      </div> <!-- Container for buttons -->
+    </form>
+  </div>
+  
+ 
+  
+  <script>
+ const form = document.getElementById('loopForm');
+let currentStep = 0;
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  if (currentStep === 0) {
+    const sessionKicks = parseInt(form.sessionKicks.value);
+
+    if (sessionKicks > 0) {
+      currentStep++;
+      showNextStep();
+
+      form.querySelector('label[for="sessionKicks"]').style.display = 'none';
+      form.querySelector('input#sessionKicks').style.display = 'none';
+      form.querySelector('label[for="sessionDate"]').style.display = 'none';
+      form.querySelector('input#sessionDate').style.display = 'none';
+      form.querySelector('input#nextButton').style.display = 'none';
+    } else {
+      alert('Please enter a valid number of kicks.');
+    }
+  } else {
+    currentStep++;
+    showNextStep();
+  }
+});
+
+    function showNextStep() {
+      const sessionKicks = parseInt(form.sessionKicks.value);
+
+
+      if (currentStep <= parseInt(sessionKicks)) {
+
+        document.getElementById("loopForm").innerHTML += `
+        <h2>Kick ${currentStep} of ${sessionKicks}</h2>
+
+        <br><br><br><br>
+
+        <label for="distance${currentStep}" style="color: #ffffff; font-size: 16px;">Distance:</label>
+        <input type="text" id="distance${currentStep}" name="distance${currentStep}" placeholder="Enter distance in yards." style="width: calc(70% - 22px); padding: 10px; margin-bottom: 20px; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; transition: border-color 1.0s ease; background-color: #333; color: #ffffff;" required>
+
+        <br><br>
+
+        <label for="location${currentStep}" style="color: #ffffff; font-size: 16px; ">Pick a Location:</label>
+        <select id="location${currentStep}" name="location${currentStep}" placeholder="Pick a location." style="width: calc(70% - 22px); padding: 10px; margin-bottom: 20px; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; transition: border-color 1.0s ease; background-color: #333; color: #ffffff"; required>
+          <option value="0"></option>
+          <option value="1">College Left Hash</option>
+          <option value="2">Left Middle</option>
+          <option value="3">Middle</option>
+          <option value="4">Right Middle</option>
+          <option value="5">College Right Hash</option>
+        </select>
+        <br><br><br><br>
+
+        <label for="chart${currentStep}" style="color: #ffffff; font-size: 16px;">Chart your kick:</label>
+        <canvas id="fieldGoalCanvas" style="display: block; margin: 20px auto; border: 3px solid #00000; border-radius: 10px;" width="800" height="600"></canvas>
+        <input type="submit" id="next" name="nextButton" value="Next">`;
+        
+
+        var canvas = document.getElementById('fieldGoalCanvas');
+        var ctx = canvas.getContext('2d');
+
+        let footballX = canvas.width / 2;
+        let footballY = canvas.height / 2;
+        canvas.width  = 600;
+        canvas.height = 600;
+
+        drawGoalPosts();
+
+        drawFootball(footballX, footballY);
+
+        canvas.addEventListener('click', function (event) {
+          const rect = canvas.getBoundingClientRect();
+          const clickX = event.clientX - rect.left;
+          const clickY = event.clientY - rect.top;
+
+          footballX = clickX;
+          footballY = clickY;
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawGoalPosts();
+          drawFootball(footballX, footballY);
+        });
+
+        function drawFootball(x, y) {
+          ctx.beginPath();
+          ctx.fillStyle = 'brown';
+          // Draw elliptical shape
+          ctx.ellipse(x, y, 5, 10, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.closePath();
+
+          // Add white laces
+          ctx.beginPath();
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = 1;
+
+          // Draw horizontal laces
+          ctx.moveTo(x - 3, y);
+          ctx.lineTo(x + 3, y);
+          ctx.moveTo(x - 3, y + 4);
+          ctx.lineTo(x + 3, y + 4);
+          ctx.moveTo(x - 3, y - 4);
+          ctx.lineTo(x + 3, y - 4);
+          
+
+          // Draw vertical laces
+          ctx.moveTo(x, y - 7);
+          ctx.lineTo(x, y + 7);
+          ctx.stroke();
+          ctx.closePath();
+      }
+
+
+        function drawGoalPosts() {
+
+          // vertical and horizontal goal posts
+          ctx.fillStyle = 'yellow';
+          ctx.fillRect(300, 450, 9, 375);
+          ctx.fillRect(70, 450, 466, 6);
+
+          // HS goal posts
+          ctx.fillRect(70, 150, 6, 300);
+          ctx.fillRect(530, 150, 6, 300);
+
+          // College goal posts
+          ctx.fillStyle = 'orange';
+          ctx.fillRect(117.382, 150, 6, 300);
+          ctx.fillRect(482.618, 150, 6, 300);
+        };
+
+        if (currentStep === sessionKicks) {
+
+          form.querySelector('#buttonContainer').innerHTML = `<input type="submit" id="submitButton" name="submitButton" value="Submit">`;
+
+    } else {
+
+      form.querySelector('#buttonContainer').innerHTML = `<button id="nextButton2" type="button" onclick="showNextStep()">Next</button>`;
+
+    }
+
+  } else {
+    form.submit();
+  }}
+
+  </script>
+</body>
+</html>

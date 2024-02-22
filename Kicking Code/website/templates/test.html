@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Your Session</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+        
+        /* Navigation */
+        nav {
+          background-color: #1e1e1e;
+          overflow: hidden;
+          text-align: center;
+          padding: 20px 0;
+        }
+        nav a {
+          color: #ffffff;
+          text-decoration: none;
+          padding: 10px 20px;
+          transition: color 0.3s ease;
+        }
+        nav a:hover {
+          color: #aaaaaa;
+        }
+
+        /* Location Select Styles */
+
+        select {
+        width: calc(60% - 22px);
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #555;
+        border-radius: 4px;
+        box-sizing: border-box;
+        background-color: #333;
+        color: #ffffff;
+        font-size: 16px;
+        }
+
+        select:focus {
+        outline: none;
+        border-color: #333;
+        }
+
+        option {
+        background-color: #333;
+        color: #ffffff;
+        }
+        
+        /* Body Styles */
+        body {
+          background-color: #121212;
+          color: #ffffff;
+          font-family: 'Roboto', sans-serif;
+          text-align: center;
+        }
+        
+        h1 {
+          color: #ffffff;
+          margin-bottom: 20px;
+        }
+        
+        /* Button Styles */
+        button {
+          background-color: #2d2d2d;
+          color: #ffffff;
+          border: none;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          cursor: pointer;
+          border-radius: 4px;
+          transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+          background-color: #181818;
+        }
+        input[type="submit"] {
+          background-color: #333;
+          color: #ffffff;
+          border: none;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          cursor: pointer;
+          border-radius: 4px;
+          transition: background-color 0.3s ease;
+          margin-top: 20px;
+        }
+        
+        input[type="submit"]:hover {
+          background-color: #181818; 
+        }
+        
+        /* Content Styles */
+        .content {
+          padding: 20px;
+        }
+        
+        /* Form Styles */
+        form {
+          background-color: #212121;
+          border-radius: 8px;
+          padding: 20px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          max-width: 800px;
+          margin: 0 auto;
+        }
+        
+        label {
+          display: block;
+          margin-bottom: 8px;
+          color: #ffffff;
+        }
+        
+        input[type="number"],
+        input[type="text"],
+        textarea {
+          width: calc(60% - 22px);
+          padding: 10px;
+          margin-bottom: 20px;
+          border: 1px solid #555;
+          border-radius: 4px;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
+          background-color: #333;
+          color: #ffffff;
+        }
+        
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        textarea:focus {
+          outline: none;
+          border-color: #333; 
+        }
+        
+        textarea {
+          height: 100px;
+          resize: vertical;
+        }
+        
+        canvas {
+          display: block;
+          margin: 20px auto;
+          border: 3px solid #000000;
+          border-radius: 10px;
+        }
+        
+        input[type="date"] {
+          width: 145px;
+          padding: 10px;
+          margin-bottom: 20px;
+          border: 1px solid #555;
+          border-radius: 4px;
+          box-sizing: border-box;
+          transition: border-color 0.3s ease;
+          background-color: #333;
+          color: #ffffff;
+          font-size: 16px;
+        }
+        
+        input[type="date"]:focus {
+          outline: none;
+          border-color: #ffffff;
+        }        
+        
+        </style>
+
+</head>
+<body>
+  <nav>
+    <a href="/home">Home</a>
+    <a href="/visualize">Visualization</a>
+    <a href="/test">Charting</a>
+    <a href="/stats">Statistics</a>
+  </nav>
+
+      <br><h1>Chart Your Session</h1></br>
+
+    <div id = "formDiv">
+    <form id="kickSessionForm">
+
+        <label for="session_kicks">Enter the # of kicks from your session <i><b>(we suggest having it on rolling film)</b></i>:</label>
+        <input type="number" id="session_kicks" name="session_kicks" min="1" required><br><br>
+
+        <label for="sessionDate">Session Date:</label>
+        <input type="date" id="sessionDate" name="sessionDate" required><br><br><br>
+        
+
+        <button type="button" onclick="generateKickForms()">Chart Kicks</button>
+    </form>
+    </div>
+
+    <div id="kickDetailsForms"></div>
+
+    <script>
+        
+    function generateKickForms() {
+
+        const div = document.getElementById('formDiv')
+        div.style.display = 'none'
+
+        const session_kicks = parseInt(document.getElementById("session_kicks").value, 10);
+        const kickDetailsFormsContainer = document.getElementById("kickDetailsForms");
+        
+
+        for (let i = 1; i <= session_kicks; i++) {
+            
+            const form = document.createElement("form");
+            form.id = `kickForm${i}`;
+
+            const heading = document.createElement("h3");
+            heading.textContent = `Kick ${i} of ${session_kicks}`;
+            form.appendChild(heading);
+
+            form.appendChild(document.createElement('br')); //BREAK LINE
+            form.appendChild(document.createElement('br')); //BREAK LINE
+            form.appendChild(document.createElement('br')); //BREAK LINE
+
+            // Distance input
+            const labelDistance = document.createElement("label");
+            labelDistance.setAttribute("for", `distance${i}`);
+            labelDistance.textContent = "Distance:";
+
+            const inputDistance = document.createElement("input");
+            inputDistance.setAttribute("type", "number");
+            inputDistance.setAttribute("id", `distance${i}`);
+            inputDistance.setAttribute("name", `distance${i}`);
+            inputDistance.setAttribute("min", "17");
+            inputDistance.setAttribute("max", "70");
+            inputDistance.setAttribute("placeholder", "Enter your distance in yards.");
+
+
+            form.appendChild(labelDistance);
+            form.appendChild(inputDistance);
+
+
+            form.appendChild(document.createElement('br')); //BREAK LINE
+            form.appendChild(document.createElement('br')); //BREAK LINE
+
+
+            // Location select dropdown
+            const labelLocation = document.createElement("label");
+            labelLocation.setAttribute("for", `location${i}`);
+            labelLocation.textContent = "Location:";
+
+            const selectLocation = document.createElement("select");
+            selectLocation.setAttribute("id", `location${i}`);
+            selectLocation.setAttribute("name", `location${i}`);
+
+            const locations = ["","Left Hash", "Left Middle", "Middle", "Right Middle", "Right Hash"];
+            locations.forEach(location => {
+                const option = document.createElement("option");
+                option.value = location;
+                option.textContent = location;
+                selectLocation.appendChild(option);
+            });
+
+            form.appendChild(labelLocation);
+            form.appendChild(selectLocation);
+
+
+            const canvas = document.createElement("canvas");
+            canvas.id = `fieldGoalCanvas${i}`;
+            canvas.width = 600;
+            canvas.height = 600;
+            form.appendChild(canvas);
+
+            const inputX = document.createElement("input");
+            inputX.setAttribute("type", "hidden");
+            inputX.setAttribute("id", `kickX${i}`);
+            form.appendChild(inputX);
+
+            const inputY = document.createElement("input");
+            inputY.setAttribute("type", "hidden");
+            inputY.setAttribute("id", `kickY${i}`);
+            form.appendChild(inputY);
+
+            
+
+            kickDetailsFormsContainer.appendChild(form);
+            initCanvas(`fieldGoalCanvas${i}`, inputX, inputY);
+            
+            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+        }
+
+        // Add submit button after generating all forms
+        
+        const submitBtn = document.createElement("button");
+        submitBtn.textContent = "Submit Session";
+        submitBtn.type = "button";
+        submitBtn.onclick = submitSessionData;
+        
+        kickDetailsFormsContainer.appendChild(submitBtn);
+        kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+        kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+        kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+        
+
+
+    }
+
+    function initCanvas(canvasId, inputX, inputY) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+
+    let footballX = canvas.width / 2;
+    let footballY = canvas.height / 2;
+
+    drawGoalPosts(ctx, canvas.width, canvas.height);
+    drawFootball(ctx, footballX, footballY);
+
+    canvas.addEventListener('click', function (event) {
+        const rect = canvas.getBoundingClientRect();
+        const clickX = event.clientX - rect.left;
+        const clickY = event.clientY - rect.top;
+
+        footballX = clickX;
+        footballY = clickY;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGoalPosts(ctx, canvas.width, canvas.height);
+        drawFootball(ctx, footballX, footballY);
+
+        inputX.value = footballX;
+        inputY.value = footballY;
+    });
+}
+
+    function drawFootball(ctx, x, y) {
+
+        ctx.beginPath();
+        ctx.fillStyle = 'brown';
+
+        // Draw elliptical shape
+        ctx.ellipse(x, y, 5, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        // Add white laces
+        ctx.beginPath();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 1;
+
+        // Draw horizontal laces
+        ctx.moveTo(x - 3, y);
+        ctx.lineTo(x + 3, y);
+        ctx.moveTo(x - 3, y + 4);
+        ctx.lineTo(x + 3, y + 4);
+        ctx.moveTo(x - 3, y - 4);
+        ctx.lineTo(x + 3, y - 4);
+        
+
+        // Draw vertical laces
+        ctx.moveTo(x, y - 7);
+        ctx.lineTo(x, y + 7);
+        ctx.stroke();
+        ctx.closePath();
+
+      }
+
+    function drawGoalPosts(ctx, canvasWidth, canvasHeight) {
+
+        // vertical and horizontal goal posts
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(300, 450, 7, 375);
+        ctx.fillRect(70, 450, 466, 4);
+
+        // HS goal posts
+        ctx.fillRect(70, 150, -4, 300);
+        ctx.fillRect(530, 150, 4, 300);
+
+        // College goal posts
+        ctx.fillStyle = 'orange';
+        ctx.fillRect(115, 150, -4, 300);
+        ctx.fillRect(484, 150, 4, 300);
+
+        };
+
+    function gatherFormData() {
+        const sessionDate = document.getElementById("sessionDate").value;
+        const session_kicks = parseInt(document.getElementById("session_kicks").value, 10);
+
+        let kicksData = [];
+
+        for (let i = 1; i <= session_kicks; i++) {
+            var distance = document.getElementById(`distance${i}`).value;
+            const location = document.getElementById(`location${i}`).value;
+
+            var inputX = document.getElementById(`kickX${i}`).value;
+            var inputY = document.getElementById(`kickY${i}`).value;
+
+        
+
+        kicksData.push({distance, location, inputX, inputY});
+        }
+
+        return {sessionDate, session_kicks, kicksData};
+    }
+
+    function submitSessionData() {
+        const sessionData = gatherFormData();
+
+        fetch('/submit-session', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json',},
+            body: JSON.stringify(sessionData)
+            
+        }).then(response => response.json())
+
+        .then(data => {
+            console.log('Success:', data);
+            document.getElementById('sessionDate').value = '';
+            document.getElementById('session_kicks').value = '';
+            document.getElementById('formDiv').style.display = 'block';
+            document.getElementById('kickDetailsForms').innerHTML = '';})
+
+        .catch((error) => console.error('Error:', error));
+    }
+
+
+    </script>
+</body>
+</html>

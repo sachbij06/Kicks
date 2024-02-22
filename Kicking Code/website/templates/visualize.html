@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Kicks</title>
+  
+  <style>
+
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+    
+    /* Navigation */
+    nav {
+      background-color: #1e1e1e;
+      overflow: hidden;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      padding: 10px 20px;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #aaaaaa; 
+    }
+    
+    /* Body Styles */
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+    }
+    
+    h1 {
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    
+    /* Button Styles */
+    button {
+      background-color: #292929; 
+      color: #ffffff;
+      border: none;
+      padding: 15px 24px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    
+    button:hover {
+      background-color: #181818;
+    }
+
+    input[type="submit"] {
+      background-color: #333;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+    
+    input[type="submit"]:hover {
+      background-color: #181818;
+    }
+
+    button:not(:last-child) {
+      margin-right: 40px;
+    }
+    
+    /* Content Styles */
+    .content {
+      padding: 20px;
+    }
+    
+    /* Form Styles */
+    form {
+      background-color: #121212;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    textarea {
+      width: calc(100% - 22px);
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+      background-color: #333;
+      color: #ffffff; 
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #333;
+    }
+
+    textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    canvas {
+      display: block;
+      margin: 20px auto;
+      border: 3px solid #000000;
+      border-radius: 10px;
+    }
+
+
+    .gray-box img {
+      border-radius: 30px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      padding: 0px;
+      display: inline-block;
+      box-shadow: 0 30px 30px rgba(88, 88, 88, 0.3);
+    }
+
+    </style>
+
+</head>
+<body>
+  <nav>
+    <a href="/home">Home</a>
+    <a href="/visualize">Visualization</a>
+    <a href="/test">Charting</a>
+    <a href="/stats">Statistics</a>
+  </nav>
+  
+  <div class="content">
+  <h1>View Your Kicks</h1>
+
+  <form id="myForm" action="/submit" method="POST">
+    <button name="visual_choice" type="submit" value="1">Plot all Kicks</button>
+    <button name="visual_choice" type="submit" value="2">Plot Left Kicks</button>
+    <button name="visual_choice" type="submit" value="3">Plot Middle Kicks</button>
+    <button name="visual_choice" type="submit" value="4">Plot Right Kicks</button>
+  </form>
+</div>
+
+  <div class="gray-box">
+      <img src= {{plot_url}} alt = "Chart cannot be displayed">
+  </div>
+
+  <br><br>
+
+  <script>
+    function reset() {
+      document.getElementById("myForm").reset();
+    }
+  </script>
+</body>
+</html>
+
