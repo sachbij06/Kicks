@@ -10,10 +10,25 @@
             padding: 0;
             box-sizing: border-box;
           }
-        
+        .sidebar {
+          position: absolute;
+          z-index: 1;
+          top: 0;
+          right: 0;
+          height: 100%;
+          width: 35%;
+          background: #1e1e1e;
+          padding-top: 60px;
+          overflow-y: scroll;
+          display: none;
+          scrollbar-width: thin;
+        }
         /* Navigation */
         nav {
-          background-color: #1e1e1e;
+          position: fixed;
+          width: 100%;
+          z-index: 2;
+          background-color: #212121;
           overflow: hidden;
           text-align: center;
           padding: 20px 0;
@@ -151,7 +166,7 @@
           display: block;
           margin: 20px auto;
           border: 3px solid #000000;
-          border-radius: 10px;
+          border-radius: 6px;
         }
         
         input[type="date"] {
@@ -193,13 +208,16 @@
 
         <label for="sessionDate">Session Date:</label>
         <input type="date" id="sessionDate" name="sessionDate" required><br><br><br>
+
+        <label for="session_video">
+        </label>
         
 
         <button type="button" onclick="generateKickForms()">Chart Kicks</button>
     </form>
     </div>
 
-    <div id="kickDetailsForms"></div>
+    <div id="kickDetailsForms" class="sidebar"></div>
 
     <script>
         
@@ -210,6 +228,8 @@
 
         const session_kicks = parseInt(document.getElementById("session_kicks").value, 10);
         const kickDetailsFormsContainer = document.getElementById("kickDetailsForms");
+        document.querySelector('.sidebar').style.display = 'block';
+
         
 
         for (let i = 1; i <= session_kicks; i++) {
@@ -270,8 +290,8 @@
 
             const canvas = document.createElement("canvas");
             canvas.id = `fieldGoalCanvas${i}`;
-            canvas.width = 600;
-            canvas.height = 600;
+            canvas.width = 450;
+            canvas.height = 450;
             form.appendChild(canvas);
 
             const inputX = document.createElement("input");
@@ -343,7 +363,7 @@
         ctx.fillStyle = 'brown';
 
         // Draw elliptical shape
-        ctx.ellipse(x, y, 5, 10, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, y, 3.75, 7.5, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
 
@@ -353,17 +373,17 @@
         ctx.lineWidth = 1;
 
         // Draw horizontal laces
-        ctx.moveTo(x - 3, y);
-        ctx.lineTo(x + 3, y);
-        ctx.moveTo(x - 3, y + 4);
-        ctx.lineTo(x + 3, y + 4);
-        ctx.moveTo(x - 3, y - 4);
-        ctx.lineTo(x + 3, y - 4);
+        ctx.moveTo(x - 2.25, y);
+        ctx.lineTo(x + 2.25, y);
+        ctx.moveTo(x - 2.25, y + 3);
+        ctx.lineTo(x + 2.25, y + 3);
+        ctx.moveTo(x - 2.25, y - 3);
+        ctx.lineTo(x + 2.25, y - 3);
         
 
         // Draw vertical laces
-        ctx.moveTo(x, y - 7);
-        ctx.lineTo(x, y + 7);
+        ctx.moveTo(x, y - 5.25);
+        ctx.lineTo(x, y + 5.25);
         ctx.stroke();
         ctx.closePath();
 
@@ -373,17 +393,17 @@
 
         // vertical and horizontal goal posts
         ctx.fillStyle = 'yellow';
-        ctx.fillRect(300, 450, 7, 375);
-        ctx.fillRect(70, 450, 466, 4);
+        ctx.fillRect(225, 337.5, 7, 281.25);
+        ctx.fillRect(52.5, 337.5, 349.5, 4);
 
         // HS goal posts
-        ctx.fillRect(70, 150, -4, 300);
-        ctx.fillRect(530, 150, 4, 300);
+        ctx.fillRect(52.5, 112.5, -4, 225);
+        ctx.fillRect(397.5, 112.5, 4, 225);
 
         // College goal posts
         ctx.fillStyle = 'orange';
-        ctx.fillRect(115, 150, -4, 300);
-        ctx.fillRect(484, 150, 4, 300);
+        ctx.fillRect(86.25, 112.5, -4, 225);
+        ctx.fillRect(363, 112.5, 4, 225);
 
         };
 
