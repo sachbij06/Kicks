@@ -31,6 +31,7 @@
           background-color: #212121;
           overflow: hidden;
           text-align: center;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.381);
           padding: 20px 0;
         }
         nav a {
@@ -66,6 +67,10 @@
         background-color: #333;
         color: #ffffff;
         }
+
+        .suggestion-text {
+        font-size: 15px; /* Example size, adjust as needed */
+        }
         
         /* Body Styles */
         body {
@@ -88,7 +93,7 @@
           padding: 10px 20px;
           text-align: center;
           text-decoration: none;
-          font-size: 16px;
+          font-size: 18px;
           cursor: pointer;
           border-radius: 4px;
           transition: background-color 0.3s ease;
@@ -126,7 +131,7 @@
           border-radius: 8px;
           padding: 20px;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          max-width: 800px;
+          max-width: 600px;
           margin: 0 auto;
         }
         
@@ -134,12 +139,13 @@
           display: block;
           margin-bottom: 8px;
           color: #ffffff;
+          font-size: 20px;
         }
         
         input[type="number"],
         input[type="text"],
         textarea {
-          width: calc(60% - 22px);
+          width: calc(40%);
           padding: 10px;
           margin-bottom: 20px;
           border: 1px solid #555;
@@ -165,12 +171,12 @@
         canvas {
           display: block;
           margin: 20px auto;
-          border: 3px solid #000000;
+          border: 2px solid #000000;
           border-radius: 6px;
         }
         
         input[type="date"] {
-          width: 145px;
+          width: calc(40%);
           padding: 10px;
           margin-bottom: 20px;
           border: 1px solid #555;
@@ -185,7 +191,63 @@
         input[type="date"]:focus {
           outline: none;
           border-color: #ffffff;
-        }        
+        }
+
+        input[type="file"] {
+          width: calc(40%);
+          padding: 5px; 
+          margin-bottom: 10px;
+          border: 1px solid #555;
+          border-radius: 4px;
+          background-color: #333;
+          color: #fff;
+          font-size: 12px;
+          transition: border-color 0.3s ease;
+        }
+
+        input[type="file"]::file-selector-button {
+          background-color: #2d2d2d;
+          border: none;
+          border-radius: 4px;
+          color: #fff;
+          cursor: pointer;
+          font-size: 16px;
+          padding: 5px 10px; 
+          transition: background-color 0.3s;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+          background-color: #181818;
+        }
+
+        input[type="file"]:focus {
+          outline: none;
+          border-color: #333;
+        }
+
+        .contentContainer {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        #formDiv, #previewContainer {
+          flex: 1;
+        }
+
+        #previewContainer {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: black;
+          width: fit-content;
+          height: 450px;
+          margin-right: 5%;
+        }
+
+        #previewContainer video {
+            width: 100%;
+            height: 100%;
+        }
         
         </style>
 
@@ -199,33 +261,73 @@
   </nav>
 
       <br><h1>Chart Your Session</h1></br>
-
+    <div class="contentContainer">
     <div id = "formDiv">
     <form id="kickSessionForm">
 
-        <label for="session_kicks">Enter the # of kicks from your session <i><b>(we suggest having it on rolling film)</b></i>:</label>
-        <input type="number" id="session_kicks" name="session_kicks" min="1" required><br><br>
 
-        <label for="sessionDate">Session Date:</label>
+        <label for="session_kicks">Enter the # of kicks from your session <i><b><br><span class= "suggestion-text">(we suggest having it on rolling film)</span></b></i></label>
+        <input type="number" id="session_kicks" name="session_kicks" min="1" required><br><br>        
+
+
+        <label for="sessionDate">Session Date</label>
         <input type="date" id="sessionDate" name="sessionDate" required><br><br><br>
 
-        <label for="session_video">Session Video:</label>
-        <input type="file" id="session_video" name="session_video" required><br><br><br>
 
+        <label for="session_video">Session Video</label>
+        <input type="file" id="session_video" name="session_video" accept="video/mp4, video/mov, video/webm"required><br><br><br>
         
+
 
         <button type="button" onclick="generateKickForms()">Chart Kicks</button>
     </form>
     </div>
 
+    <div id="previewContainer"></div>
+
+    </div>
+
     <div id="kickDetailsForms" class="sidebar"></div>
 
     <script>
+    document.getElementById('session_video').addEventListener('change', function(event) {
+      
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.innerHTML = '';
+
+            if (file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.src = e.target.result;
+                video.controls = true;
+                video.style.maxWidth = '100%';
+                video.style.maxHeight = '100%';
+                previewContainer.appendChild(video);
+            } else {
+                const textDiv = document.createElement('div');
+                textDiv.textContent = "File uploaded. Preview not available for this type.";
+                previewContainer.appendChild(textDiv);
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+    
         
     function generateKickForms() {
-
-        const div = document.getElementById('formDiv')
-        div.style.display = 'none'
+      const previewContainer = document.getElementById('previewContainer');
+    previewContainer.style.position = 'fixed';
+    previewContainer.style.width = '65vw';
+    previewContainer.style.height = '100vh';
+    previewContainer.style.top = '0';
+    previewContainer.style.left = '0';
+        const div = document.getElementById('formDiv');
+        div.style.display = 'none';
 
         const session_kicks = parseInt(document.getElementById("session_kicks").value, 10);
         const kickDetailsFormsContainer = document.getElementById("kickDetailsForms");
@@ -291,8 +393,8 @@
 
             const canvas = document.createElement("canvas");
             canvas.id = `fieldGoalCanvas${i}`;
-            canvas.width = 450;
-            canvas.height = 450;
+            canvas.width = 405;
+            canvas.height = 405;
             form.appendChild(canvas);
 
             const inputX = document.createElement("input");
@@ -364,7 +466,7 @@
         ctx.fillStyle = 'brown';
 
         // Draw elliptical shape
-        ctx.ellipse(x, y, 3.75, 7.5, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, y, 3.75*0.9, 7.5*0.9, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
 
@@ -374,17 +476,17 @@
         ctx.lineWidth = 1;
 
         // Draw horizontal laces
-        ctx.moveTo(x - 2.25, y);
-        ctx.lineTo(x + 2.25, y);
-        ctx.moveTo(x - 2.25, y + 3);
-        ctx.lineTo(x + 2.25, y + 3);
-        ctx.moveTo(x - 2.25, y - 3);
-        ctx.lineTo(x + 2.25, y - 3);
+        ctx.moveTo(x - 2.25*0.9, y);
+        ctx.lineTo(x + 2.25*0.9, y);
+        ctx.moveTo(x - 2.25*0.9, y + 3);
+        ctx.lineTo(x + 2.25*0.9, y + 3);
+        ctx.moveTo(x - 2.25*0.9, y - 3);
+        ctx.lineTo(x + 2.25*0.9, y - 3);
         
 
         // Draw vertical laces
-        ctx.moveTo(x, y - 5.25);
-        ctx.lineTo(x, y + 5.25);
+        ctx.moveTo(x, y - 5.25*0.9);
+        ctx.lineTo(x, y + 5.25*0.9);
         ctx.stroke();
         ctx.closePath();
 
@@ -394,17 +496,17 @@
 
         // vertical and horizontal goal posts
         ctx.fillStyle = 'yellow';
-        ctx.fillRect(225, 337.5, 7, 281.25);
-        ctx.fillRect(52.5, 337.5, 349.5, 4);
+        ctx.fillRect(225*0.9, 337.5*0.9, 6, 281.25*0.9); //vertical
+        ctx.fillRect(48.5*0.9, 337.5*0.9, 353.5*0.9, 4); //horizontal
 
         // HS goal posts
-        ctx.fillRect(52.5, 112.5, -4, 225);
-        ctx.fillRect(397.5, 112.5, 4, 225);
+        ctx.fillRect(52.5*0.9, 112.5*0.9, -4, 225*0.9);
+        ctx.fillRect(397.5*0.9, 112.5*0.9, 4, 225*0.9);
 
         // College goal posts
         ctx.fillStyle = 'orange';
-        ctx.fillRect(86.25, 112.5, -4, 225);
-        ctx.fillRect(363, 112.5, 4, 225);
+        ctx.fillRect(86.25*0.9, 112.5*0.9, -4, 225*0.9);
+        ctx.fillRect(363*0.9, 112.5*0.9, 4, 225*0.9);
 
         };
 
@@ -444,7 +546,10 @@
             document.getElementById('sessionDate').value = '';
             document.getElementById('session_kicks').value = '';
             document.getElementById('formDiv').style.display = 'block';
-            document.getElementById('kickDetailsForms').innerHTML = '';})
+            document.querySelector('.sidebar').style.display = 'none';      
+            document.getElementById('kickDetailsForms').innerHTML = '';
+            })
+            
 
         .catch((error) => console.error('Error:', error));
     }
@@ -452,4 +557,5 @@
 
     </script>
 </body>
+
 </html>
