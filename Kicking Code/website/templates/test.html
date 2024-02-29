@@ -12,7 +12,7 @@
           }
         .sidebar {
           position: absolute;
-          z-index: 1;
+          z-index: 2;
           top: 0;
           right: 0;
           height: 100%;
@@ -22,16 +22,17 @@
           overflow-y: scroll;
           display: none;
           scrollbar-width: thin;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
         }
         /* Navigation */
         nav {
           position: fixed;
           width: 100%;
-          z-index: 2;
+          z-index: 3;
           background-color: #212121;
           overflow: hidden;
           text-align: center;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.381);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
           padding: 20px 0;
         }
         nav a {
@@ -242,6 +243,8 @@
           background-color: black;
           height: 450px;
           margin-right: 5%;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
+          z-index: 1;
         }
 
         #previewContainer video {
