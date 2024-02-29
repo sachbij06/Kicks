@@ -238,8 +238,8 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          background-color: black;
           width: fit-content;
+          background-color: black;
           height: 450px;
           margin-right: 5%;
         }
@@ -290,6 +290,11 @@
     <div id="kickDetailsForms" class="sidebar"></div>
 
     <script>
+    const previewContainer = document.getElementById('previewContainer');
+    previewContainer.innerHTML = '';
+    document.getElementById('previewContainer').style.width = 'fit-content';
+    document.getElementById('previewContainer').style.display = 'flex';
+
     document.getElementById('session_video').addEventListener('change', function(event) {
       
         const file = event.target.files[0];
@@ -320,12 +325,12 @@
     
         
     function generateKickForms() {
-      const previewContainer = document.getElementById('previewContainer');
-    previewContainer.style.position = 'fixed';
-    previewContainer.style.width = '65vw';
-    previewContainer.style.height = '100vh';
-    previewContainer.style.top = '0';
-    previewContainer.style.left = '0';
+        const previewContainer = document.getElementById('previewContainer');
+        previewContainer.style.position = 'fixed';
+        previewContainer.style.width = '65vw';
+        previewContainer.style.height = '100vh';
+        previewContainer.style.top = '0';
+        previewContainer.style.left = '0';
         const div = document.getElementById('formDiv');
         div.style.display = 'none';
 
@@ -393,8 +398,8 @@
 
             const canvas = document.createElement("canvas");
             canvas.id = `fieldGoalCanvas${i}`;
-            canvas.width = 405;
-            canvas.height = 405;
+            canvas.width = 427.5;
+            canvas.height = 427.5;
             form.appendChild(canvas);
 
             const inputX = document.createElement("input");
@@ -466,7 +471,7 @@
         ctx.fillStyle = 'brown';
 
         // Draw elliptical shape
-        ctx.ellipse(x, y, 3.75*0.9, 7.5*0.9, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, y, 3.75*0.95, 7.5*0.95, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
 
@@ -476,17 +481,17 @@
         ctx.lineWidth = 1;
 
         // Draw horizontal laces
-        ctx.moveTo(x - 2.25*0.9, y);
-        ctx.lineTo(x + 2.25*0.9, y);
-        ctx.moveTo(x - 2.25*0.9, y + 3);
-        ctx.lineTo(x + 2.25*0.9, y + 3);
-        ctx.moveTo(x - 2.25*0.9, y - 3);
-        ctx.lineTo(x + 2.25*0.9, y - 3);
+        ctx.moveTo(x - 2.25*0.95, y);
+        ctx.lineTo(x + 2.25*0.95, y);
+        ctx.moveTo(x - 2.25*0.95, y + 3);
+        ctx.lineTo(x + 2.25*0.95, y + 3);
+        ctx.moveTo(x - 2.25*0.95, y - 3);
+        ctx.lineTo(x + 2.25*0.95, y - 3);
         
 
         // Draw vertical laces
-        ctx.moveTo(x, y - 5.25*0.9);
-        ctx.lineTo(x, y + 5.25*0.9);
+        ctx.moveTo(x, y - 5.25*0.95);
+        ctx.lineTo(x, y + 5.25*0.95);
         ctx.stroke();
         ctx.closePath();
 
@@ -496,17 +501,17 @@
 
         // vertical and horizontal goal posts
         ctx.fillStyle = 'yellow';
-        ctx.fillRect(225*0.9, 337.5*0.9, 6, 281.25*0.9); //vertical
-        ctx.fillRect(48.5*0.9, 337.5*0.9, 353.5*0.9, 4); //horizontal
+        ctx.fillRect(225*0.95, 337.5*0.95, 6, 281.25*0.95); //vertical
+        ctx.fillRect(48.5*0.95, 337.5*0.95, 353.5*0.95, 4); //horizontal
 
         // HS goal posts
-        ctx.fillRect(52.5*0.9, 112.5*0.9, -4, 225*0.9);
-        ctx.fillRect(397.5*0.9, 112.5*0.9, 4, 225*0.9);
+        ctx.fillRect(52.5*0.95, 112.5*0.95, -4, 225*0.95);
+        ctx.fillRect(397.5*0.95, 112.5*0.95, 4, 225*0.95);
 
         // College goal posts
         ctx.fillStyle = 'orange';
-        ctx.fillRect(86.25*0.9, 112.5*0.9, -4, 225*0.9);
-        ctx.fillRect(363*0.9, 112.5*0.9, 4, 225*0.9);
+        ctx.fillRect(86.25*0.95, 112.5*0.95, -4, 225*0.95);
+        ctx.fillRect(363*0.95, 112.5*0.95, 4, 225*0.95);
 
         };
 
@@ -543,11 +548,7 @@
 
         .then(data => {
             console.log('Success:', data);
-            document.getElementById('sessionDate').value = '';
-            document.getElementById('session_kicks').value = '';
-            document.getElementById('formDiv').style.display = 'block';
-            document.querySelector('.sidebar').style.display = 'none';      
-            document.getElementById('kickDetailsForms').innerHTML = '';
+            location.reload()
             })
             
 
