@@ -9,7 +9,7 @@ stats = Flask(__name__)
 stats = Blueprint("stats", __name__, static_folder="static", template_folder="templates")
 
 
-@stats.route('/')
+@stats.route('/stats')
 def show_results():
 
   print("hi")

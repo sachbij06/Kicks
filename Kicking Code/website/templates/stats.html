@@ -172,7 +172,9 @@
 
 
 <div class="gray-box">
-    <img src= {{plot_url}} alt = "Chart cannot be displayed">
+  {% if get_plot %}
+  <img src="{{ plot_url }}" alt="Generated Plot">
+{% endif %}
 </div>
 
 
