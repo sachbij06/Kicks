@@ -1,11 +1,13 @@
 from flask import Flask, render_template
 from session import session
 from _visualization import visualize
+from _statistics import stats
 
 
 app = Flask(__name__)
 app.register_blueprint(session, url_prefix="")
 app.register_blueprint(visualize, url_prefix="")
+app.register_blueprint(stats, url_prefix="")
 
 
 @app.route("/home")
