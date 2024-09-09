@@ -166,10 +166,6 @@ def show_results():
     middle_pct = len(middle_made) / (len(middle_made) + len(middle_missed)) * 100
 
 
-
-
-  visual_choice = request.form['visual_choice']
-
   fig, ax = plt.subplots(figsize=(12, 6))
     
   ax.set_xlim(0, 100)
@@ -255,7 +251,6 @@ def show_results():
   ax.axis('off')
 
 
-  print("hello")
   plt.plot()
   plt.savefig('Kicking Code/website/static/KO.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
   return render_template('stats.html', get_plot = True, plot_url='static/KO.png', attempts = attempts)
