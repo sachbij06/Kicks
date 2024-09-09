@@ -37,7 +37,6 @@ def submit_form():
           visualized_total_makes += 1
   
 
-
     elif visual_choice == "2":
         visualized_total_attempts = 0
         for attempt in attempts:

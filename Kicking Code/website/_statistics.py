@@ -27,6 +27,8 @@ current_day_of_week = (day_diff % 7) + 1
 
 
 def show_results():
+
+
   if os.path.isfile(stats_file):
 
     left_hash_made = []
@@ -359,7 +361,4 @@ def show_results():
   plt.plot()
   plt.savefig('Kicking Code/website/static/KO.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
   return render_template('stats.html', get_plot = True, plot_url='static/KO.png', attempts = attempts)
-
-  else:
-    print("")
 
