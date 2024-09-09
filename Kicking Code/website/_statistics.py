@@ -15,7 +15,7 @@ def render():
 
 @stats.route('/submit', methods=['GET', 'POST'])
 def show_results():
-  if request.method =='POST':
+  if request.method == 'POST':
 
     attempts = _data.get_all_data()
 
@@ -263,7 +263,7 @@ def show_results():
     plt.plot()
     plt.savefig('Kicking Code/website/static/KO.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
     return render_template('stats.html', get_plot = True, plot_url='static/KO.png', attempts = attempts)
-  
+
 
   else:
-      return render_template('visualize.html')
+      return render_template('stats.html')
