@@ -10,9 +10,6 @@ stats = Blueprint("stats", __name__, static_folder="static", template_folder="te
 
 
 @stats.route('/')
-def render():
-  results = show_results()
-  return render_template('stats.html', results=results)
 
 def show_results():
   attempts = _data.get_all_data()
