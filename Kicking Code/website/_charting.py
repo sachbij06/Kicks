@@ -1,4 +1,3 @@
-import tkinter as tk
 import _data
 
 from flask import Flask, request, render_template
