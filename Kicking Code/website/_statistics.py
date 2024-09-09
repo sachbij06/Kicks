@@ -8,8 +8,11 @@ import numpy as np
 app = Flask(__name__)
 stats = Blueprint("stats", __name__, static_folder="static", template_folder="templates")
 
+@stats.route('/')
+def render():
+  return render_template('stats.html')
 
-@stats.route('/stats')
+@stats.route('/')
 def show_results():
 
   attempts = _data.get_all_data()
