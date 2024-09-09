@@ -1,10 +1,10 @@
 from flask import Flask, render_template
-from test import test
+from session import session
 from _visualization import visualize
 
 
 app = Flask(__name__)
-app.register_blueprint(test, url_prefix="")
+app.register_blueprint(session, url_prefix="")
 app.register_blueprint(visualize, url_prefix="")
 
 
@@ -12,9 +12,9 @@ app.register_blueprint(visualize, url_prefix="")
 def home():
     return render_template('index.html')
 
-@app.route("/test")
+@app.route("/session")
 def test():
-    return render_template('test.html')
+    return render_template('session.html')
 
 @app.route("/stats")
 def stats():

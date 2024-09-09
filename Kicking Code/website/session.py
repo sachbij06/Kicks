@@ -5,10 +5,10 @@ app = Flask(__name__)
 
 attempts = _data.get_all_data()
 
-test = Blueprint("test", __name__, static_folder="static", template_folder="templates")
+session = Blueprint("session", __name__, static_folder="static", template_folder="templates")
 
 
-@test.route('/submit-session', methods=['GET', 'POST'])
+@session.route('/submit-session', methods=['GET', 'POST'])
 def submit_session():
     if request.method == 'POST':
         data = request.json
