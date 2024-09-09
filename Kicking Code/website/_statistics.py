@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template, Blueprint
+from flask import Flask, request, render_template, Blueprint, send_file
 
+import io
 import json, math, _data
 import matplotlib.pyplot as plt
 import numpy as np
@@ -262,5 +263,9 @@ def show_results():
 
   print("hello")
   plt.plot()
-  plt.savefig('Kicking Code/website/static/KO.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
-  return render_template('stats.html', get_plot = True, plot_url='static/KO.png', attempts = attempts)
+
+  img = io.BytesIO()
+  plt.savefig(img, format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
+  img.seek(0)
+
+  return send_file(img, mimetype='image/png')
