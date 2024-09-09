@@ -13,7 +13,7 @@ stats = Blueprint("stats", __name__, static_folder="static", template_folder="te
 def render():
    return render_template('stats.html')
 
-@stats.route('/submit', methods=['POST'])
+@stats.route('/submit', methods=['GET', 'POST'])
 def show_results():
   if request.method =='POST':
 
