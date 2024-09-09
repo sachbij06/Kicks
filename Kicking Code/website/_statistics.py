@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-app = Flask(__name__)
+stats = Flask(__name__)
 stats = Blueprint("stats", __name__, static_folder="static", template_folder="templates")
 
 
