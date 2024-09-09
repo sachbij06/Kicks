@@ -12,8 +12,6 @@ stats = Blueprint("stats", __name__, static_folder="static", template_folder="te
 @stats.route('/stats')
 def show_results():
 
-  print("hi")
-  
   attempts = _data.get_all_data()
 
   left_hash_made = []
