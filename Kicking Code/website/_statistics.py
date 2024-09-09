@@ -9,8 +9,10 @@ app = Flask(__name__)
 stats = Blueprint("stats", __name__, static_folder="static", template_folder="templates")
 
 
-@stats.route('/show')
+@stats.route('/')
 def show_results():
+
+  print("hi")
   
   attempts = _data.get_all_data()
 
