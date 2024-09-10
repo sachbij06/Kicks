@@ -8,7 +8,7 @@ import numpy as np
 app = Flask(__name__)
 stats = Blueprint("stats", __name__, static_folder="static", template_folder="templates")
 
-@stats.route('/new')
+@stats.route('/')
 def render():
   return render_template('stats.html')
 
@@ -56,7 +56,7 @@ def show_results():
   total_euclidean_distance = 0
 
 
-  for fg in made_field_goals:
+  for fg in attempts:
 
     if fg[1] == 'College Left Hash':
       left_hash_made.append(fg)
@@ -73,7 +73,7 @@ def show_results():
     elif fg[1] == 'Middle':
       middle_made.append(fg)
 
-  for fg in missed_field_goals:
+  for fg in attempts:
 
     if fg[1] == 'College Left Hash':
       left_hash_missed.append(fg)
