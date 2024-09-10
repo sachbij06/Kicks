@@ -1,236 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Code Info</title>
-  <style>
-    *{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-    
-    /* Navigation */
-    nav {
-      background-color: #1e1e1e;
-      overflow: hidden;
-      text-align: center;
-      padding: 20px 0;
-    }
-    nav a {
-      color: #ffffff;
-      text-decoration: none;
-      padding: 10px 20px;
-      transition: color 0.3s ease;
-    }
-    nav a:hover {
-      color: #aaaaaa;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kicking Performance Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Location Select Styles */
+        /* Navigation */
+        nav {
+            background-color: #1e1e1e;
+            overflow: hidden;
+            text-align: center;
+            padding: 20px 0;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #aaaaaa;
+        }
 
-    select {
-    width: calc(60% - 22px);
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #555;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #333;
-    color: #ffffff;
-    font-size: 16px;
-    }
+        /* Location Select Styles */
+        select {
+            width: calc(60% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #333;
+            color: #ffffff;
+            font-size: 16px;
+        }
 
-    select:focus {
-    outline: none;
-    border-color: #333;
-    }
+        select:focus {
+            outline: none;
+            border-color: #333;
+        }
 
-    option {
-    background-color: #333;
-    color: #ffffff;
-    }
-    
-    /* Body Styles */
-    body {
-      background-color: #121212;
-      color: #ffffff;
-      font-family: 'Roboto', sans-serif;
-      text-align: center;
-    }
-    
-    h1 {
-      color: #ffffff;
-      margin-bottom: 20px;
-    }
-    
-    /* Button Styles */
-    button {
-      background-color: #2d2d2d;
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      text-align: center;
-      text-decoration: none;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
-    
-    button:hover {
-      background-color: #181818;
-    }
-    input[type="submit"] {
-      background-color: #333;
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      text-align: center;
-      text-decoration: none;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-      margin-top: 20px;
-    }
-    
-    input[type="submit"]:hover {
-      background-color: #181818; 
-    }
-    
-    /* Content Styles */
-    .content {
-      padding: 20px;
-    }
-    
-    /* Form Styles */
-    form {
-      background-color: #212121;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #ffffff;
-    }
-    
-    input[type="number"],
-    input[type="text"],
-    textarea {
-      width: calc(60% - 22px);
-      padding: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #555;
-      border-radius: 4px;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease;
-      background-color: #333;
-      color: #ffffff;
-    }
-    
-    input[type="number"]:focus,
-    input[type="text"]:focus,
-    textarea:focus {
-      outline: none;
-      border-color: #333; 
-    }
-    
-    textarea {
-      height: 100px;
-      resize: vertical;
-    }
-    
-    canvas {
-      display: block;
-      margin: 20px auto;
-      border: 3px solid #000000;
-      border-radius: 10px;
-    }
-    
-    input[type="date"] {
-      width: 145px;
-      padding: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #555;
-      border-radius: 4px;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease;
-      background-color: #333;
-      color: #ffffff;
-      font-size: 16px;
-    }
-    
-    input[type="date"]:focus {
-      outline: none;
-      border-color: #ffffff;
-    }
+        option {
+            background-color: #333;
+            color: #ffffff;
+        }
 
-    .hero-section {
-  position: relative;
-  overflow: hidden;
-  /* Set specific height or make it responsive */
-  height: 90vh; /* Example height */
-}
+        /* Body Styles */
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+        }
 
-.hero-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* This ensures the video covers the hero area */
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-    
+        h1 {
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #2d2d2d;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #181818;
+        }
+        input[type="submit"] {
+            background-color: #333;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #181818;
+        }
+
+        /* Content Styles */
+        .content {
+            padding: 20px;
+        }
+
+        /* Form Styles */
+        form {
+            background-color: #212121;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        textarea {
+            width: calc(60% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            background-color: #333;
+            color: #ffffff;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 3px solid #000000;
+            border-radius: 10px;
+        }
+
+        input[type="date"] {
+            width: 145px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            background-color: #333;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #ffffff;
+        }
+
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            height: 90vh; /* Example height */
+        }
+
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     </style>
-
-
 </head>
 <body>
-  <nav>
-    <a href="/home">Home</a>
-    <a href="/visualize">Visualization</a>
-    <a href="/session">Charting</a>
-    <a href="/stats">Statistics</a>
-  </nav>
+    <nav>
+        <a href="/home">Home</a>
+        <a href="/visualize">Visualization</a>
+        <a href="/session">Charting</a>
+        <a href="/stats">Statistics</a>
+    </nav>
 
-  <br><br><br>
+    <div class="content">
+        <section class="functionality">
+            <h2>1. Chart Field Goal Session</h2>
+            <p class="description">
+                Our field goal charting feature includes video analysis, precision and height calculations, 
+                and a rolling film uploader to help you track every session with ease.
+            </p>
+            <img src="path_to_field_goal_charting_image.jpg" alt="Field Goal Charting Image">
+        </section>
 
-      <h1>Elevate Your Kicking Game: Track, Chart, and Visualize Your Progress Like Never Before</h1>
-  
-  <br><br><br>
+        <section class="functionality">
+            <h2>2. Visualize Field Goal Session</h2>
+            <p class="description">
+                Visualize your field goal stats with detailed graphs. Analyze your performance by looking 
+                at your kicks from the left hash, right hash, middle, or all kicks combined. 
+                You can view your overall FG %, average deviation from the middle, and directional bias.
+            </p>
+            <img src="path_to_field_goal_visualization_image.jpg" alt="Field Goal Visualization Graph">
+        </section>
 
+        <section class="functionality">
+            <h2>3. Visualize Kickoff Session</h2>
+            <p class="description">
+                Our kickoff visualization tool provides insights on your kickoff sessions, including 
+                touchback percentage, average distance, and hang time. Monitor your kickoff stats to 
+                improve your performance.
+            </p>
+            <img src="path_to_kickoff_visualization_image.jpg" alt="Kickoff Visualization Graph">
+        </section>
+    </div>
 
-  <h2>Designed for kickers at all levels, our platform offers personalized tracking and insights to help you hit your peak performance</h2>
-
-  <br><br><br>
-
-  <div class="hero-section">
-  <video class="hero-video" autoplay loop muted playsinline>
-    <source src="hello.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</div>
-  <br><br><br>
-
-  <section>
-    <h2>Features and Benefits</h2>
-    <p>Track Sessions: "Log every kick with ease and detail, from distance to ball speed."</p>
-    <p>Chart Progress: "Visualize your improvement over time with customizable charts."</p>
-    <p>Insights and Analysis: "Gain actionable insights with our AI-driven analysis tailored to your kicking patterns."</p>
-  </section>
-
-  <br><br><br>
-
-  <footer>
-    <a href="#" class="cta-button">Start Tracking Now</a>
-  </footer>
-  
+    <footer>
+        <p>&copy; 2024 Kicking Performance Tracker. All rights reserved.</p>
+    </footer>
 </body>
 </html>

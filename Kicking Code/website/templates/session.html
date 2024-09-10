@@ -278,7 +278,7 @@
 
 
         <label for="session_video">Session Video</label>
-        <input type="file" id="session_video" name="session_video" accept="video/mp4, video/mov, video/webm"required><br><br><br>
+        <input type="file" id="session_video" name="session_video" accept="mp4, mov, webm"required><br><br><br>
         
 
 
@@ -310,12 +310,13 @@
             const previewContainer = document.getElementById('previewContainer');
             previewContainer.innerHTML = '';
 
-            if (file.type.startsWith('video/')) {
+            if (file.type.startsWith('video/mov')) {
                 const video = document.createElement('video');
                 video.src = e.target.result;
                 video.controls = true;
                 video.style.maxWidth = '100%';
                 video.style.maxHeight = '100%';
+                video.type = "video/mp4"
                 previewContainer.appendChild(video);
             } else {
                 const textDiv = document.createElement('div');
