@@ -474,7 +474,7 @@
         ctx.fillStyle = 'brown';
 
         // Draw elliptical shape
-        ctx.ellipse(x, y, 3.75*0.95, 7.5*0.95, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, y, 3.5625, 7.125, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
 
@@ -484,17 +484,17 @@
         ctx.lineWidth = 1;
 
         // Draw horizontal laces
-        ctx.moveTo(x - 2.25*0.95, y);
-        ctx.lineTo(x + 2.25*0.95, y);
-        ctx.moveTo(x - 2.25*0.95, y + 3);
-        ctx.lineTo(x + 2.25*0.95, y + 3);
-        ctx.moveTo(x - 2.25*0.95, y - 3);
-        ctx.lineTo(x + 2.25*0.95, y - 3);
+        ctx.moveTo(x - 2.1375, y);
+        ctx.lineTo(x + 2.1375, y);
+        ctx.moveTo(x - 2.1375, y + 3);
+        ctx.lineTo(x + 2.1375, y + 3);
+        ctx.moveTo(x - 2.1375, y - 3);
+        ctx.lineTo(x + 2.1375, y - 3);
         
 
         // Draw vertical laces
-        ctx.moveTo(x, y - 5.25*0.95);
-        ctx.lineTo(x, y + 5.25*0.95);
+        ctx.moveTo(x, y - 4.9875);
+        ctx.lineTo(x, y + 4.9875);
         ctx.stroke();
         ctx.closePath();
 
@@ -504,8 +504,8 @@
 
         // vertical and horizontal goal posts
         ctx.fillStyle = 'yellow';
-        ctx.fillRect(225*0.95, 337.5*0.95, 6, 281.25*0.95); //vertical
-        ctx.fillRect(48.5*0.95, 337.5*0.95, 353.5*0.95, 4); //horizontal
+        ctx.fillRect(213.75, 320.625, 6, 267.1875); //vertical
+        ctx.fillRect(46.075, 337.5*0.95, 353.5*0.95, 4); //horizontal
 
         // HS goal posts
         ctx.fillRect(52.5*0.95, 112.5*0.95, -4, 225*0.95);
