@@ -224,34 +224,7 @@
             </p>
             <img src="path_to_kickoff_visualization_image.jpg" alt="Kickoff Visualization Graph">
         </section>
-
-        <script>
-          const canvas = document.createElement("canvas");
-            canvas.id = `fieldGoalCanvas${i}`;
-            canvas.width = 427.5;
-            canvas.height = 427.5;
-            form.appendChild(canvas);
-
-            const inputX = document.createElement("input");
-            inputX.setAttribute("type", "hidden");
-            inputX.setAttribute("id", `kickX${i}`);
-            form.appendChild(inputX);
-
-            const inputY = document.createElement("input");
-            inputY.setAttribute("type", "hidden");
-            inputY.setAttribute("id", `kickY${i}`);
-            form.appendChild(inputY);
-
-            
-
-            kickDetailsFormsContainer.appendChild(form);
-            initCanvas(`fieldGoalCanvas${i}`, inputX, inputY);
-            
-            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
-            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
-            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
         
-        </script>
     </div>
 
     <footer>
