@@ -32,7 +32,7 @@ def submit_session():
             x = int(float(kick['inputX']))
             y = int(float(kick['inputY']))
 
-            precision_score = (x - 300) / (233) * 10
+            precision_score = ((x - 49.875) / (327.75)) *20 -10
             distance_score = -(y - 440) / (300) * 10
 
             print(precision_score)
