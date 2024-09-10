@@ -228,8 +228,7 @@ def submit_form():
             xForFieldGoal = 26.65
 
           elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)
-          
+            xForFieldGoal = 26.65 + (attempt[5][0] * .665)    
       
       elif visual_choice == "2":
 
@@ -269,7 +268,6 @@ def submit_form():
           yForFieldGoal = 0
           yPositionOnField = 0
 
-
       elif visual_choice == "3":
 
         if attempt[1] == 'College Left Hash':
@@ -304,7 +302,6 @@ def submit_form():
           xForFieldGoal = 0
           yForFieldGoal = 0
           yPositionOnField = 0
-
 
       elif visual_choice == "4":
           

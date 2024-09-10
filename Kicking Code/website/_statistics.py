@@ -8,13 +8,17 @@ import numpy as np
 app = Flask(__name__)
 stats = Blueprint("stats", __name__, static_folder="static", template_folder="templates")
 
-
 @stats.route('/new')
 def render():
   return render_template('stats.html')
 
 @stats.route('/')
+def render():
+  results = show_results()
+  return render_template('stats.html', results=results)
+
 def show_results():
+
   attempts = _data.get_all_data()
 
   left_hash_made = []
@@ -86,6 +90,8 @@ def show_results():
     elif fg[1] == 'Middle':
       middle_missed.append(fg)
       
+  
+
   for attempt in attempts:
     avg_abs_value += abs(attempt[5][0])
     aggregate_precision_scores += (attempt[5][0])
@@ -116,7 +122,6 @@ def show_results():
     if attempt[4] == 'make':
       total_makes += 1
 
-  
   # general stats
     avg_euclidean_distance = total_euclidean_distance / total_attempts
     average_precision_score = avg_abs_value / total_attempts
@@ -169,7 +174,7 @@ def show_results():
       middle_pct = len(middle_made) / (len(middle_made) + len(middle_missed)) * 100
 
 
-  # -------------------------- Combined Stats Initialization --------------------------
+# -------------------------- Combined Stats Initialization --------------------------
 
   combined_makes = 0
   combined_attempts = 0
@@ -228,7 +233,7 @@ def show_results():
       week_missed_field_goals = specific_week_data['missed_field_goals']
   
 
-  # --------------------------------- General Stats ---------------------------------
+# --------------------------------- General Stats ---------------------------------
 
       for fg in week_made_field_goals:
         if fg[1] == 'College Left Hash':
@@ -252,7 +257,7 @@ def show_results():
         elif fg[1] == 'Middle':
           week_middle_missed.append(fg)
 
-  # --------------------------------- Location Stats ---------------------------------
+# --------------------------------- Location Stats ---------------------------------
 
       week_left_hash_ratio = f"{len(week_college_left_hash_made)}/{(len(week_college_left_hash_made) + len(week_college_left_hash_missed))}"
       if (len(week_college_left_hash_made) + len(week_college_left_hash_missed)) != 0:
@@ -326,18 +331,18 @@ def show_results():
         week_fg50_plus_pct = len(week_fg_50_plus_made) / (len(week_fg_50_plus_made) + len(week_fg_50_plus_missed)) * 100
 
 
-    combined_ratio = (f"{combined_makes}/{combined_attempts}")
-    combined_pct_made = combined_makes / combined_attempts * 100
+  combined_ratio = (f"{combined_makes}/{combined_attempts}")
+  combined_pct_made = combined_makes / combined_attempts * 100
 
 
-    combined_left_hash_ratio = (f"{combined_college_left_hash_made}/{combined_college_left_hash_attempted}")
-    combined_left_hash_pct = combined_college_left_hash_made / combined_college_left_hash_attempted * 100
+  combined_left_hash_ratio = (f"{combined_college_left_hash_made}/{combined_college_left_hash_attempted}")
+  combined_left_hash_pct = combined_college_left_hash_made / combined_college_left_hash_attempted * 100
 
-    combined_right_hash_ratio = (f"{combined_college_right_hash_made}/{combined_college_right_hash_attempted}")
-    combined_right_hash_pct = combined_college_right_hash_made / combined_college_right_hash_attempted * 100
+  combined_right_hash_ratio = (f"{combined_college_right_hash_made}/{combined_college_right_hash_attempted}")
+  combined_right_hash_pct = combined_college_right_hash_made / combined_college_right_hash_attempted * 100
 
-    combined_middle_ratio = (f"{combined_middle_made}/{combined_middle_attempted}")
-    combined_middle_pct = combined_middle_made / combined_middle_attempted * 100
+  combined_middle_ratio = (f"{combined_middle_made}/{combined_middle_attempted}")
+  combined_middle_pct = combined_middle_made / combined_middle_attempted * 100
 
   fig, ax = plt.subplots(figsize=(12, 6))
     
@@ -423,9 +428,7 @@ def show_results():
   ax.set_aspect('auto')
   ax.axis('off')
 
-
-
+  plt.show()
   plt.plot()
   plt.savefig('Kicking Code/website/static/KO.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
   return render_template('stats.html', get_plot = True, plot_url='static/KO.png', attempts = attempts)
-
