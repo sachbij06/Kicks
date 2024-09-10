@@ -18,6 +18,10 @@ def home():
 def test():
     return render_template('session.html')
 
+@app.route("/comingsoon")
+def comingsoon():
+    return render_template('coming_soon.html')
+
 @app.route("/stats")
 def stats():
     return render_template('stats.html')

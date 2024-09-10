@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon - Projects</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        nav {
+          position: fixed;
+          width: 100%;
+          z-index: 3;
+          background-color: #212121;
+          overflow: hidden;
+          text-align: center;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+          padding: 20px 0;
+        }
+        nav a {
+          color: #ffffff;
+          text-decoration: none;
+          padding: 10px 20px;
+          transition: color 0.3s ease;
+        }
+        nav a:hover {
+          color: #aaaaaa;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            color: #aaaaaa;
+        }
+
+        /* Flexbox container for each project */
+        .project-section {
+            width: 80%;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border: 2px solid white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between; /* Create space between the content and the image */
+            align-items: center; /* Vertically align items */
+        }
+
+        .project-section .content {
+            flex: 1; /* Take up majority of the width */
+            padding-right: 20px; /* Add some space between the content and image */
+        }
+
+        .project-section h2 {
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .project-section p {
+            font-size: 1.2em;
+            color: #dddddd;
+            text-align: left;
+        }
+
+        .project-section img {
+            width: 300px; /* Set a fixed width for the image */
+            height: auto; /* Maintain aspect ratio */
+            border: 3px solid white;
+            border-radius: 8px;
+        }
+
+        .coming-soon-text {
+            margin-top: 30px;
+            font-size: 1.5em;
+            color: #ff5722;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/home">Home</a>
+        <a href="/visualize">Visualization</a>
+        <a href="/session">Charting</a>
+        <a href="/stats">Statistics</a>
+        <a href="/comingsoon">Coming Soon</a>
+      </nav>
+
+    <!-- Coming Soon Heading -->
+    <h1>Coming Soon!</h1>
+    <p>Explore the exciting projects I'm working on. Stay tuned for more updates and launches!</p>
+
+    <!-- Kicking Performance Project Section -->
+    <div class="project-section">
+        <div class="content">
+            <h2>Kicking Performance Project</h2>
+            <p>This section will showcase the progress and insights from the Kicking Performance project, including field goal tracking, advanced statistics, and performance analysis tools.</p>
+        </div>
+
+        <!-- Single Image for the Project on the Right -->
+        <img src="path_to_image1.jpg" alt="Kicking Project Image">
+    </div>
+
+    <!-- Other Projects Section -->
+    <div class="project-section">
+        <div class="content">
+            <h2>Other Projects</h2>
+            <p>Here you can explore other exciting projects I'm currently working on. From AI tools to performance tracking systems, there’s a lot in development!</p>
+        </div>
+
+        <!-- Single Image for the Project on the Right -->
+        <img src="path_to_other_image.jpg" alt="Other Project Image">
+    </div>
+
+</body>
+</html>

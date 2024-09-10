@@ -48,7 +48,7 @@
         /* Left section - Field Goal Tracker and Description */
         .left-section {
             flex: 0 0 55%; /* Takes up 50% of the screen */
-            padding: 120px 0;
+            padding: 100px 0;
             border-right: 0.5px solid white;
             display: flex;
             flex-direction: column;
@@ -63,14 +63,17 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
         }
 
         .right-section h1 {
-            font-size: 2.5em;
+            width: 75%;
+            font-size: 2.4em;
             margin-bottom: 20px;
         }
 
         .right-section p {
+            width: 75%;
             font-size: 1.2em;
             line-height: 1.6;
         }
@@ -98,9 +101,10 @@
         }
 
         video {
-            width: 85%; /* Adjust the video width as desired */
+            width: 80%; /* Adjust the video width as desired */
+            padding: 20px;
             border: 0px solid white;
-            border-radius: 8px;
+            border-radius: 40px;
         }
     </style>
 </head>
@@ -108,10 +112,11 @@
 
     <!-- Nav Bar -->
     <nav>
-        <a href="/home">Home</a>
-        <a href="/visualize">Visualization</a>
-        <a href="/session">Charting</a>
-        <a href="/stats">Statistics</a>
+      <a href="/home">Home</a>
+      <a href="/visualize">Visualization</a>
+      <a href="/session">Charting</a>
+      <a href="/stats">Statistics</a>
+      <a href="/comingsoon">Coming Soon</a>
     </nav>
 
     <!-- Main Content Container -->
@@ -126,9 +131,8 @@
         <div class="right-section">
             <h1>Precision, Performance, Insights.</h1>
             <p>
-                Welcome to your all-in-one performance tracker! On the left, we have our dynamic
-                field goal tracker demo you can play around with. Use our tracker here along with
-                our kickoff tracker you can experience in the demo here.
+                Welcome to your all-in-one performance tracker! On the left, we have both our dynamic
+                field goal tracker and kickoff tracker demo you can play around with. You can use these tools here and can track your performance here. Good luck!
             </p>
         </div>
     </div>
