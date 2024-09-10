@@ -12,10 +12,10 @@ stats = Blueprint("stats", __name__, static_folder="static", template_folder="te
 def render():
   return render_template('stats.html')
 
+
 @stats.route('/')
-
 def show_results():
-
+  
   attempts = _data.get_all_data()
 
   left_hash_made = []

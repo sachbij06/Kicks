@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from session import session
 from _visualization import visualize
-from _please import stats
+from _stats import stats
 
 
 app = Flask(__name__)
