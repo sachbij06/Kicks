@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kicking Performance Tracker</title>
+    <title>Field Goal Tracker</title>
     <style>
         * {
             margin: 0;
@@ -11,183 +11,102 @@
             box-sizing: border-box;
         }
 
-        /* Navigation */
+        body {
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            background-color: #121212;
+            color: white;
+        }
+
+        /* Navigation Bar */
         nav {
-            background-color: #1e1e1e;
-            overflow: hidden;
-            text-align: center;
-            padding: 20px 0;
+          position: fixed;
+          width: 100%;
+          z-index: 3;
+          background-color: #212121;
+          overflow: hidden;
+          text-align: center;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+          padding: 20px 0;
         }
         nav a {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 10px 20px;
-            transition: color 0.3s ease;
+          color: #ffffff;
+          text-decoration: none;
+          padding: 10px 20px;
+          transition: color 0.3s ease;
         }
         nav a:hover {
-            color: #aaaaaa;
+          color: #aaaaaa;
         }
 
-        /* Location Select Styles */
-        select {
-            width: calc(60% - 22px);
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #555;
-            border-radius: 4px;
-            box-sizing: border-box;
-            background-color: #333;
-            color: #ffffff;
-            font-size: 16px;
+        /* Container for left and right sections */
+        .container {
+            display: flex;
+            height: 55vh; /* Adjusted height to leave room for navbar */
         }
 
-        select:focus {
-            outline: none;
-            border-color: #333;
+        /* Left section - Field Goal Tracker and Description */
+        .left-section {
+            flex: 0 0 55%; /* Takes up 50% of the screen */
+            padding: 120px 0;
+            border-right: 0.5px solid white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
         }
 
-        option {
-            background-color: #333;
-            color: #ffffff;
-        }
-
-        /* Body Styles */
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: 'Roboto', sans-serif;
-            text-align: center;
-        }
-
-        h1 {
-            color: #ffffff;
-            margin-bottom: 20px;
-        }
-
-        /* Button Styles */
-        button {
-            background-color: #2d2d2d;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #181818;
-        }
-        input[type="submit"] {
-            background-color: #333;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #181818;
-        }
-
-        /* Content Styles */
-        .content {
+        /* Right section - Title and Text */
+        .right-section {
+            flex: 0 0 45%; /* Takes up 50% of the screen */
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        /* Form Styles */
-        form {
-            background-color: #212121;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        input[type="number"],
-        input[type="text"],
-        textarea {
-            width: calc(60% - 22px);
-            padding: 10px;
+        .right-section h1 {
+            font-size: 2.5em;
             margin-bottom: 20px;
-            border: 1px solid #555;
-            border-radius: 4px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-            background-color: #333;
-            color: #ffffff;
         }
 
-        input[type="number"]:focus,
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #333;
-        }
-
-        textarea {
-            height: 100px;
-            resize: vertical;
+        .right-section p {
+            font-size: 1.2em;
+            line-height: 1.6;
         }
 
         canvas {
-            display: block;
-            margin: 20px auto;
-            border: 3px solid #000000;
-            border-radius: 10px;
+            border: 0.1px solid white;
+            border-radius: 8px;
+            background-color: #1e1e1e;
+            margin-bottom: 0px; /* Space between the canvas and the text */
         }
 
-        input[type="date"] {
-            width: 145px;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #555;
-            border-radius: 4px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-            background-color: #333;
-            color: #ffffff;
-            font-size: 16px;
+        .description {
+            text-align: center;
+            margin-bottom: 0px; /* Space between the text and the video */
         }
 
-        input[type="date"]:focus {
-            outline: none;
-            border-color: #ffffff;
-        }
-
-        .hero-section {
-            position: relative;
-            overflow: hidden;
-            height: 90vh; /* Example height */
-        }
-
-        .hero-video {
+        /* New Section for Video */
+        .video-section {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center; /* Center the video */
+            border-top: 0.1px solid white;
+            margin-top: 20px; /* Add space between the main section and video */
+        }
+
+        video {
+            width: 85%; /* Adjust the video width as desired */
+            border: 0px solid white;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
+
+    <!-- Nav Bar -->
     <nav>
         <a href="/home">Home</a>
         <a href="/visualize">Visualization</a>
@@ -195,40 +114,141 @@
         <a href="/stats">Statistics</a>
     </nav>
 
-    <div class="content">
-        <section class="functionality">
-            <h2>1. Chart Field Goal Session</h2>
-            <p class="description">
-                Our field goal charting feature includes video analysis, precision and height calculations, 
-                and a rolling film uploader to help you track every session with ease.
-            </p>
-            <img src="path_to_field_goal_charting_image.jpg" alt="Field Goal Charting Image">
-        </section>
+    <!-- Main Content Container -->
+    <div class="container">
+        <!-- Left section: Field Goal Tracker and Text -->
+        <div class="left-section">
+            <!-- Dynamic Field Goal Tracker -->
+            <canvas id="fieldGoalCanvas" width="400" height="400"></canvas>
+        </div>
 
-        <section class="functionality">
-            <h2>2. Visualize Field Goal Session</h2>
-            <p class="description">
-                Visualize your field goal stats with detailed graphs. Analyze your performance by looking 
-                at your kicks from the left hash, right hash, middle, or all kicks combined. 
-                You can view your overall FG %, average deviation from the middle, and directional bias.
+        <!-- Right section: Title and Text -->
+        <div class="right-section">
+            <h1>Precision, Performance, Insights.</h1>
+            <p>
+                Welcome to your all-in-one performance tracker! On the left, we have our dynamic
+                field goal tracker demo you can play around with. Use our tracker here along with
+                our kickoff tracker you can experience in the demo here.
             </p>
-            <img src="path_to_field_goal_visualization_image.jpg" alt="Field Goal Visualization Graph">
-        </section>
-
-        <section class="functionality">
-            <h2>3. Visualize Kickoff Session</h2>
-            <p class="description">
-                Our kickoff visualization tool provides insights on your kickoff sessions, including 
-                touchback percentage, average distance, and hang time. Monitor your kickoff stats to 
-                improve your performance.
-            </p>
-            <img src="path_to_kickoff_visualization_image.jpg" alt="Kickoff Visualization Graph">
-        </section>
-        
+        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Kicking Performance Tracker. All rights reserved.</p>
-    </footer>
+    <!-- Video Section -->
+    <div class="video-section">
+        <!-- Video Demo Section -->
+        <video autoplay muted loop>
+            <source src="static\demo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Add your JavaScript for the field goal demo here -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const canvas = document.getElementById('fieldGoalCanvas');
+            const ctx = canvas.getContext('2d');
+
+            let footballX = 213.75;
+            let footballY = 106.9;
+
+            drawGoalPosts(ctx, canvas.width, canvas.height);
+            drawFootball(ctx, footballX, footballY);
+            drawScores(ctx, footballX, footballY);  // Draw initial scores
+
+            canvas.addEventListener('click', function (event) {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+
+                footballX = clickX;
+                footballY = clickY;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawGoalPosts(ctx, canvas.width, canvas.height);
+                drawFootball(ctx, footballX, footballY);
+                drawScores(ctx, footballX, footballY);  // Update the scores after the click
+            });
+        });
+
+        function drawFootball(ctx, x, y) {
+            ctx.beginPath();
+            ctx.fillStyle = 'brown';
+            ctx.ellipse(x, y, 3.5625, 7.125, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 1;
+            ctx.moveTo(x - 2.1375, y);
+            ctx.lineTo(x + 2.1375, y);
+            ctx.moveTo(x - 2.1375, y + 3);
+            ctx.lineTo(x + 2.1375, y + 3);
+            ctx.moveTo(x - 2.1375, y - 3);
+            ctx.lineTo(x + 2.1375, y - 3);
+            ctx.moveTo(x, y - 4.9875);
+            ctx.lineTo(x, y + 4.9875);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        function drawGoalPosts(ctx, canvasWidth, canvasHeight) {
+            // vertical and horizontal goal posts
+            ctx.fillStyle = 'yellow';
+            ctx.fillRect(213.75, 320.625, 6, 267.1875); //vertical
+            ctx.fillRect(46.075, 320.625, 335.825, 4); //horizontal
+
+            // HS goal posts
+            ctx.fillRect(49.875, 106.875, -4, 213.75);
+            ctx.fillRect(377.625, 106.875, 4, 213.75);
+
+            // College goal posts
+            ctx.fillStyle = 'orange';
+            ctx.fillRect(81.9375, 106.875, -4, 213.75);
+            ctx.fillRect(344.85, 106.875, 4, 213.75);
+        }
+
+        function drawScores(ctx, footballX, footballY) {
+            const precision_score = ((footballX - 49.875) / 327.75) * 20 - 10;
+            const height_score = (320.635 - footballY) / 213.76 * 10;
+
+            ctx.lineWidth = 0;
+            ctx.strokeStyle = '#ffffff';
+            ctx.font = '14px Arial';
+
+            // Precision Box
+            ctx.strokeRect(0, 0, 120, 30);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(`Precision`, 10, 20);
+            ctx.fillText(`${precision_score.toFixed(2)}`, 79, 20);
+
+            ctx.beginPath();
+            ctx.moveTo(70, 1);
+            ctx.lineTo(70, 54);
+            ctx.stroke();
+
+            // Height Box
+            ctx.strokeRect(0, 30, 120, 25);
+            ctx.fillText(`Height`, 19, 47.5);
+            ctx.fillText(`${height_score.toFixed(2)}`, 80, 47.5);
+
+            // Make or Miss Logic
+            let result = "Miss";
+            let resultColor = "red";
+            let fontWeight = "bold";
+
+            if (precision_score < 8 && precision_score > -8 && height_score > 0) {
+                result = "Make";
+                resultColor = "green";
+                fontWeight = "normal";  // Not bold if it's a make
+            }
+
+            // Make/Miss Box
+            ctx.strokeRect(325, 0, 75, 40);
+            ctx.fillStyle = resultColor;
+            ctx.font = `${fontWeight} 16px Arial`;
+            ctx.fillText(`${result}`, 345, 25);
+        }
+    </script>
 </body>
 </html>
