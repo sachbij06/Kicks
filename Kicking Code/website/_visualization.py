@@ -15,16 +15,18 @@ visualize = Blueprint("visualize", __name__, static_folder="static", template_fo
 def submit_form():
   if request.method == 'POST':
 
-    
-    location_choice = request.form['location_choice'] if 'location_choice' in request.form else "1"
-    distance_choice = request.form['distance_choice'] if 'distance_choice' in request.form else "1"
-    
+    # Get form choices, including checking if advanced stats are requested
+    location_choice = request.form.get('location_choice', "1")
+    distance_choice = request.form.get('distance_choice', "1")
+    show_advanced_stats = request.form.get('show_advanced_stats', "0")  # "1" for Advanced Stats
+
     attempts = _data.get_all_data()
 
     sum_of_precision_scores = 0
-    visualized_total_attempts = len(attempts)
+    visualized_total_attempts = 0
     visualized_total_makes = 0
     sum_of_abs_value = 0
+    sum_of_euclidean_distances = 0  # To calculate Euclidean distance
 
     # Function to filter attempts based on the selected distance range
     def is_within_distance(attempt, distance_choice):
@@ -54,25 +56,34 @@ def submit_form():
             elif location_choice == "4" and attempt[1] in ["College Right Hash", "Right Middle"]:
                 filtered_attempts.append(attempt)
 
-    # Update visualized_total_attempts after filtering
     visualized_total_attempts = len(filtered_attempts)
 
-    # Calculate the stats based on the filtered attempts
     for attempt in filtered_attempts:
         sum_of_precision_scores += attempt[5][0]
         sum_of_abs_value += abs(attempt[5][0])
         if attempt[4] == 'make':
             visualized_total_makes += 1
 
-    # If there are no attempts after filtering, avoid division by zero
+        # Calculate Euclidean distance only if advanced stats are requested
+        if show_advanced_stats == "1":
+            precision_score = attempt[5][0]  # x-coordinate
+            distance_height_score = attempt[5][1]  # y-coordinate
+            euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)
+            sum_of_euclidean_distances += euclidean_distance
+
     if visualized_total_attempts > 0:
         visualized_pct_made = visualized_total_makes / visualized_total_attempts * 100
         visualized_directional = sum_of_precision_scores / visualized_total_attempts
         visualized_deviation_from_middle = sum_of_abs_value / visualized_total_attempts
+        if show_advanced_stats == "1":
+            avg_euclidean_distance = sum_of_euclidean_distances / visualized_total_attempts
+        else:
+            avg_euclidean_distance = None
     else:
         visualized_pct_made = 0
         visualized_directional = 0
         visualized_deviation_from_middle = 0
+        avg_euclidean_distance = None
     
 
     fig, ax = plt.subplots(figsize=(16, 10))
