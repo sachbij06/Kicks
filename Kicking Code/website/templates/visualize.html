@@ -311,8 +311,8 @@
 
   <nav>
     <a href="/home">Home</a>
-    <a href="/visualize">Visualization</a>
     <a href="/session">Charting</a>
+    <a href="/visualize">Visualization</a>
     <a href="/stats">Statistics</a>
     <a href="/comingsoon">Coming Soon</a>
   </nav>
@@ -322,13 +322,11 @@
     <button onclick="toggleDropdown('fieldGoalDropdown')">Field Goal     ▼</button>
     <div id="fieldGoalDropdown" class="dropdown-content" style="display: block;">
       <button onclick="resetStats()">Basic Stats</button> <!-- Resets to the overall stats -->
-      <button onclick="advancedStats()">Advanced Stats</button> <!-- Shows advanced stats -->
       <button>AI Insights</button>
     </div>
-    <button onclick="toggleDropdown('kickoffDropdown')">Kickoff ▼</button>
-    <div id="kickoffDropdown" class="dropdown-content" style="display: block;">
+    <button onclick="toggleDropdown('kickoffDropdown')">Kickoff - Coming Soon</button>
+    <div id="kickoffDropdown" class="dropdown-content">
       <button>Basic Stats</button>
-      <button>Advanced Stats</button>
       <button>AI Insights</button>
     </div>
   </div>
@@ -359,6 +357,8 @@
         <button onclick="selectOption(this, 'location', 4)">Right</button>
       </div>
     </div>
+    
+    <!-- Timeframe - Coming Soon -->
 
     <div class ="sort-option">
       <button onclick="toggleDropdown('timeframeDropdown')">Timeframe - Coming Soon</button>
@@ -370,13 +370,18 @@
     </div>
   </div>
 
+
+
   <div class="content">
     <h1>Field Goal</h1>
   </div>
 
   <div class="gray-box">
-      <img src="{{plot_url}}" alt="Chart cannot be displayed">
-  </div>
+    <img id="dynamicImage" src="{{ plot_url }}" alt="Image not available" style="display: none;">
+    <h2 id="defaultText">Get started by clicking 'Basic Stats'.</h2>
+</div>
+
+
 
   <script>
     let selectedLocation = null;
@@ -397,7 +402,9 @@
       }
     }
 
+    // Reset stats (basic stats)
     function resetStats() {
+
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = '/visualize';
@@ -405,12 +412,12 @@
       const locationField = document.createElement('input');
       locationField.type = 'hidden';
       locationField.name = 'location_choice';
-      locationField.value = 1;  // Resets to all locations
+      locationField.value = 1;  // Reset to all locations
 
       const distanceField = document.createElement('input');
       distanceField.type = 'hidden';
       distanceField.name = 'distance_choice';
-      distanceField.value = 1;  // Resets to all distances
+      distanceField.value = 1;  // Reset to all distances
 
       form.appendChild(locationField);
       form.appendChild(distanceField);
@@ -418,32 +425,6 @@
       form.submit();
     }
 
-    function advancedStats() {
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = '/visualize';
-
-      const locationField = document.createElement('input');
-      locationField.type = 'hidden';
-      locationField.name = 'location_choice';
-      locationField.value = 1;
-
-      const distanceField = document.createElement('input');
-      distanceField.type = 'hidden';
-      distanceField.name = 'distance_choice';
-      distanceField.value = 1;
-
-      const advancedField = document.createElement('input');
-      advancedField.type = 'hidden';
-      advancedField.name = 'show_advanced_stats';
-      advancedField.value = 1;  // Enable advanced stats
-
-      form.appendChild(locationField);
-      form.appendChild(distanceField);
-      form.appendChild(advancedField);
-      document.body.appendChild(form);
-      form.submit();
-    }
 
     // Submit form with both location and distance
     function submitForm() {
@@ -468,6 +449,7 @@
 
       form.appendChild(locationField);
       form.appendChild(distanceField);
+      
       document.body.appendChild(form);
       form.submit();
     }
@@ -477,6 +459,24 @@
       const dropdown = document.getElementById(dropdownId);
       dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     }
+
+    const img = document.getElementById("dynamicImage");
+    const defaultText = document.getElementById("defaultText");
+
+    // Check if the image source is valid
+    img.onload = function() {
+        // If the image loads successfully, display it and hide the default text
+        img.style.display = "block";
+        defaultText.style.display = "none";
+    };
+
+    img.onerror = function() {
+        // If the image doesn't load, keep it hidden and show the default text
+        img.style.display = "none";
+        defaultText.style.display = "block";
+    };
+
+
   </script>
 </body>
 </html>

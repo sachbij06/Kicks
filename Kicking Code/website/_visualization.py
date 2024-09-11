@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, Blueprint
-import _data
+import _data, math
 
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
@@ -9,19 +9,18 @@ app = Flask(__name__)
 visualize = Blueprint("visualize", __name__, static_folder="static", template_folder="templates")
 
 
-
-
 @visualize.route('/visualize', methods=['GET', 'POST'])
 def submit_form():
   if request.method == 'POST':
 
-    # Get form choices, including checking if advanced stats are requested
+  # Get form choices, no need for advanced stats toggle
     location_choice = request.form.get('location_choice', "1")
     distance_choice = request.form.get('distance_choice', "1")
-    show_advanced_stats = request.form.get('show_advanced_stats', "0")  # "1" for Advanced Stats
 
+    # Fetch all the attempts data
     attempts = _data.get_all_data()
 
+    # Initialize metrics
     sum_of_precision_scores = 0
     visualized_total_attempts = 0
     visualized_total_makes = 0
@@ -47,7 +46,7 @@ def submit_form():
     filtered_attempts = []
     for attempt in attempts:
         if is_within_distance(attempt, distance_choice):
-            if location_choice == "1":
+            if location_choice == "1":  # All locations
                 filtered_attempts.append(attempt)
             elif location_choice == "2" and attempt[1] in ["College Left Hash", "Left Middle"]:
                 filtered_attempts.append(attempt)
@@ -58,39 +57,42 @@ def submit_form():
 
     visualized_total_attempts = len(filtered_attempts)
 
+    # Process filtered attempts
     for attempt in filtered_attempts:
         sum_of_precision_scores += attempt[5][0]
         sum_of_abs_value += abs(attempt[5][0])
         if attempt[4] == 'make':
             visualized_total_makes += 1
 
-        # Calculate Euclidean distance only if advanced stats are requested
-        if show_advanced_stats == "1":
-            precision_score = attempt[5][0]  # x-coordinate
-            distance_height_score = attempt[5][1]  # y-coordinate
-            euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)
-            sum_of_euclidean_distances += euclidean_distance
+        # Calculate Euclidean distance for each attempt
+        precision_score = attempt[5][0]  # x-coordinate
+        distance_height_score = attempt[5][1]  # y-coordinate
+        euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)
+        sum_of_euclidean_distances += euclidean_distance
 
+    # Calculate averages
     if visualized_total_attempts > 0:
         visualized_pct_made = visualized_total_makes / visualized_total_attempts * 100
         visualized_directional = sum_of_precision_scores / visualized_total_attempts
         visualized_deviation_from_middle = sum_of_abs_value / visualized_total_attempts
-        if show_advanced_stats == "1":
-            avg_euclidean_distance = sum_of_euclidean_distances / visualized_total_attempts
-        else:
-            avg_euclidean_distance = None
+        avg_euclidean_distance = sum_of_euclidean_distances / visualized_total_attempts
     else:
         visualized_pct_made = 0
         visualized_directional = 0
         visualized_deviation_from_middle = 0
         avg_euclidean_distance = None
-    
 
+    # Plotting the stats
     fig, ax = plt.subplots(figsize=(16, 10))
-    plt.axis('off') # Turns off the x and y axes
+    plt.axis('off')  # Turns off the x and y axes
     
-    ax.text(3, 70, f"FG: {visualized_total_makes}/{visualized_total_attempts}\n% Made: {visualized_pct_made:.2f}%\nAverage Deviation from Middle: ±{visualized_deviation_from_middle:.2f}\nDirectional: {visualized_directional:.2f}", fontsize = 12, color = 'white' )
-    
+    # Display basic stats with Euclidean distance
+    ax.text(3, 70, f"FG: {visualized_total_makes}/{visualized_total_attempts}\n% Made: {visualized_pct_made:.2f}%\n"
+                    f"Average Deviation from Middle: ±{visualized_deviation_from_middle:.2f}\n"
+                    f"Directional: {visualized_directional:.2f}\n"
+                    f"Average Euclidean Distance: {avg_euclidean_distance:.2f}", fontsize=12, color='white')
+  
+
     # Plot the field
     ax.add_patch(patches.Rectangle((0, 0), 53.3, 60, facecolor='mediumseagreen')) # Adds a green rectangle for the field
     
