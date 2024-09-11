@@ -45,37 +45,37 @@
             height: 60vh; /* Adjusted height to leave room for navbar */
         }
 
-        /* Left section - Field Goal Tracker and Description */
+        /* Left section - Title and Text */
         .left-section {
-            flex: 0 0 55%; /* Takes up 50% of the screen */
-            padding: 100px 0;
-            border-right: 0.5px solid white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        /* Right section - Title and Text */
-        .right-section {
-            flex: 0 0 45%; /* Takes up 50% of the screen */
+            flex: 0 0 60%; /* Takes up 45% of the screen */
             padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            border-right: 0.5px solid white; /* Adjust the border to be on the right */
         }
 
-        .right-section h1 {
+        .left-section h1 {
             width: 75%;
             font-size: 2.4em;
             margin-bottom: 20px;
         }
 
-        .right-section p {
+        .left-section p {
             width: 75%;
             font-size: 1.2em;
             line-height: 1.6;
+        }
+
+        /* Right section - Field Goal Tracker and Description */
+        .right-section {
+            flex: 0 0 40%; /* Takes up 55% of the screen */
+            padding: 100px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
         }
 
         canvas {
@@ -115,25 +115,25 @@
         <a href="/home">Home</a>
         <a href="/session">Charting</a>
         <a href="/visualize">Visualization</a>
-        <a href="/stats">Statistics</a>
+        <a href="/stats">Kickoff Sample</a>
         <a href="/comingsoon">Coming Soon</a>
       </nav>
 
     <!-- Main Content Container -->
     <div class="container">
-        <!-- Left section: Field Goal Tracker and Text -->
+        <!-- Left section: Title and Text -->
         <div class="left-section">
-            <!-- Dynamic Field Goal Tracker -->
-            <canvas id="fieldGoalCanvas" width="400" height="400"></canvas>
-        </div>
-
-        <!-- Right section: Title and Text -->
-        <div class="right-section">
             <h1>Precision, Performance, Insights.</h1>
             <p>
-                Welcome to your all-in-one performance tracker! On the left, we have both our dynamic
-                field goal tracker and kickoff tracker demo you can play around with. You can use these tools <a href="http://127.0.0.1:4000/session">here</a> and can track your performance <a href="http://127.0.0.1:4000/visualize">here</a>. Good luck!
+                Welcome to your all-in-one performance tracker! On the right, we have our dynamic
+                field goal tracker demo you can play around with. You can use this tools along with others <a href="http://127.0.0.1:4000/session">here</a> and can track your performance <a href="http://127.0.0.1:4000/visualize">here</a>. Good luck!
             </p>
+        </div>
+
+        <!-- Right section: Field Goal Tracker -->
+        <div class="right-section">
+            <!-- Dynamic Field Goal Tracker -->
+            <canvas id="fieldGoalCanvas" width="400" height="400"></canvas>
         </div>
     </div>
 

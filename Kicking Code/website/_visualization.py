@@ -1,9 +1,7 @@
 from flask import Flask, request, render_template, Blueprint
 import _data, math
-
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
-
 
 app = Flask(__name__)
 visualize = Blueprint("visualize", __name__, static_folder="static", template_folder="templates")
@@ -12,8 +10,7 @@ visualize = Blueprint("visualize", __name__, static_folder="static", template_fo
 @visualize.route('/visualize', methods=['GET', 'POST'])
 def submit_form():
   if request.method == 'POST':
-
-  # Get form choices, no need for advanced stats toggle
+    # Get form choices, no need for advanced stats toggle
     location_choice = request.form.get('location_choice', "1")
     distance_choice = request.form.get('distance_choice', "1")
 
@@ -48,69 +45,73 @@ def submit_form():
         if is_within_distance(attempt, distance_choice):
             if location_choice == "1":  # All locations
                 filtered_attempts.append(attempt)
-            elif location_choice == "2" and attempt[1] in ["College Left Hash", "Left Middle"]:
+            elif location_choice == "2" and attempt[1] in ["Left Hash", "Left Middle"]:
                 filtered_attempts.append(attempt)
             elif location_choice == "3" and attempt[1] == "Middle":
                 filtered_attempts.append(attempt)
-            elif location_choice == "4" and attempt[1] in ["College Right Hash", "Right Middle"]:
+            elif location_choice == "4" and attempt[1] in ["Right Hash", "Right Middle"]:
                 filtered_attempts.append(attempt)
 
+    # Check if there are any filtered attempts
     visualized_total_attempts = len(filtered_attempts)
 
-    # Process filtered attempts
-    for attempt in filtered_attempts:
-        sum_of_precision_scores += attempt[5][0]
-        sum_of_abs_value += abs(attempt[5][0])
-        if attempt[4] == 'make':
-            visualized_total_makes += 1
-
-        # Calculate Euclidean distance for each attempt
-        precision_score = attempt[5][0]  # x-coordinate
-        distance_height_score = attempt[5][1]  # y-coordinate
-        euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)
-        sum_of_euclidean_distances += euclidean_distance
-
-    # Calculate averages
     if visualized_total_attempts > 0:
+        # Process filtered attempts
+        for attempt in filtered_attempts:
+            sum_of_precision_scores += attempt[4][0]
+            sum_of_abs_value += abs(attempt[4][0])
+            if attempt[3] == 'make':
+                visualized_total_makes += 1
+
+            # Calculate Euclidean distance for each attempt
+            precision_score = attempt[4][0]  # x-coordinate
+            distance_height_score = attempt[4][1]  # y-coordinate
+            euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)
+            sum_of_euclidean_distances += euclidean_distance
+
+        # Calculate averages
         visualized_pct_made = visualized_total_makes / visualized_total_attempts * 100
         visualized_directional = sum_of_precision_scores / visualized_total_attempts
         visualized_deviation_from_middle = sum_of_abs_value / visualized_total_attempts
         avg_euclidean_distance = sum_of_euclidean_distances / visualized_total_attempts
     else:
+        # No attempts found for the given filter; set default values
         visualized_pct_made = 0
         visualized_directional = 0
         visualized_deviation_from_middle = 0
         avg_euclidean_distance = None
 
-    # Plotting the stats
-    fig, ax = plt.subplots(figsize=(12, 10))
+    # Plotting the stats only if there are filtered attempts
+    fig, ax = plt.subplots(figsize=(15, 10))
     plt.axis('off')  # Turns off the x and y axes
-    
-    # Display basic stats with Euclidean distance
-    ax.text(3, 70, f"FG: {visualized_total_makes}/{visualized_total_attempts}\n% Made: {visualized_pct_made:.2f}%\n"
-                    f"Average Deviation from Middle: ±{visualized_deviation_from_middle:.2f}\n"
-                    f"Directional: {visualized_directional:.2f}\n"
-                    f"Average Euclidean Distance: {avg_euclidean_distance:.2f}", fontsize=12, color='white')
-  
+
+    if visualized_total_attempts > 0:
+        # Display basic stats with Euclidean distance
+        ax.text(3, 70, f"FG: {visualized_total_makes}/{visualized_total_attempts}\n"
+                        f"% Made: {visualized_pct_made:.2f}%\n"
+                        f"Average Deviation from Middle: ±{visualized_deviation_from_middle:.2f}\n"
+                        f"Directional: {visualized_directional:.2f}\n"
+                        f"Average Euclidean Distance: {avg_euclidean_distance:.2f}",
+                fontsize=12, color='white')
+    else:
+        # Display no data message
+        ax.text(3, 115, "No field goal attempts found for the selected filters.", fontsize=16, color='white')
 
     # Plot the field
     ax.add_patch(patches.Rectangle((0, 0), 53.3, 60, facecolor='mediumseagreen')) # Adds a green rectangle for the field
-    
+   
     # Plot the end zone 
     ax.add_patch(patches.Rectangle((0, 50), 53.3, 10, facecolor='seagreen')) # Adds a green rectangle for the end zone
     ax.add_patch(patches.Rectangle((0, 60), 53.3, 70, facecolor='black')) # Adds a black rectangle as background
     
     # Plot the goal posts
-    ax.plot([26.65, 26.65], [71, 60], color='yellow', linewidth=3) # Base goalpost
-    ax.plot([20, 20], [101, 71], color='yellow', linewidth=3) # Left upright
-    ax.plot([33.3, 33.3], [101, 71], color='yellow', linewidth=3) # Right upright
-    
-    ax.plot([21.33, 21.33], [101, 71], color='orange', linewidth=3) # Left College upright
-    ax.plot([31.97, 31.97], [101, 71], color='orange', linewidth=3) # Right College upright
-    
-    # Plot the crossbar
-    ax.plot([20, 33.3], [71, 71], color='yellow', linewidth=3) 
-    
+    ax.plot([26.65, 26.65], [71, 60], color='yellow', linewidth=3)  # Base goalpost
+    ax.plot([20, 20], [101, 71], color='yellow', linewidth=3)  # Left upright
+    ax.plot([33.3, 33.3], [101, 71], color='yellow', linewidth=3)  # Right upright
+    ax.plot([21.33, 21.33], [101, 71], color='orange', linewidth=3)  # Left College upright
+    ax.plot([31.97, 31.97], [101, 71], color='orange', linewidth=3)  # Right College upright
+    ax.plot([20, 33.3], [71, 71], color='yellow', linewidth=3)  # Plot the crossbar 
+
     
     # Plot the yard lines and hash marks
     
@@ -130,7 +131,7 @@ def submit_form():
     
       # Left Hash Mark
     ax.plot([13.325, 13.325], [0, 50], color='white', linewidth=1) # HS Left Hash
-    ax.plot([17.75, 17.75], [0, 50], color='orange', linewidth=1, alpha = 0.75) # College Left Hash
+    ax.plot([17.75, 17.75], [0, 50], color='orange', linewidth=1, alpha = 0.75) # Left Hash
     
       # Left hash marks
     for yard_line in range(50, 0, -1):
@@ -138,7 +139,7 @@ def submit_form():
     
       # Right Hash Mark
     ax.plot([39.975, 39.975], [0, 50], color='white', linewidth=1) # HS Right Hash
-    ax.plot([35.55, 35.55], [0, 50], color='orange', linewidth=1, alpha = 0.75) # College Right Hash
+    ax.plot([35.55, 35.55], [0, 50], color='orange', linewidth=1, alpha = 0.75) # Right Hash
     
       # Right hash marks
     for yard_line in range(50, 0, -1):
@@ -151,7 +152,7 @@ def submit_form():
       xLocationOnField = 0 #xLocationOnField initialization
       xForFieldGoal = 0 #xForFieldGoal initialization
       
-      yForFieldGoal = 71 + (attempt[5][1] * 3)
+      yForFieldGoal = 71 + (attempt[4][1] * 3)
       distance = attempt[0]
       yPositionOnField = 60 - distance #convert distance to y-axis position
 
@@ -162,74 +163,74 @@ def submit_form():
 
       if location_choice == "1":
 
-        if attempt[1] == 'College Left Hash':
+        if attempt[1] == 'Left Hash':
           xLocationOnField = 17.75
           
-          if attempt[5][0] == 0:
+          if attempt[4][0] == 0:
             xForFieldGoal = 26.65
 
-          elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+          elif attempt[4][0] != 0:
+            xForFieldGoal = 26.65 + (attempt[4][0] * .665)
 
 
         elif attempt[1] == 'Left Middle':
           xLocationOnField = 22.2
           
-          if attempt[5][0] == 0:
+          if attempt[4][0] == 0:
             xForFieldGoal = 26.65
 
-          elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+          elif attempt[4][0] != 0:
+            xForFieldGoal = 26.65 + (attempt[4][0] * .665)
 
 
         elif attempt[1] == 'Middle':
           xLocationOnField = 26.65
           
-          if attempt[5][0] == 0:
+          if attempt[4][0] == 0:
             xForFieldGoal = 26.65
 
-          elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+          elif attempt[4][0] != 0:
+            xForFieldGoal = 26.65 + (attempt[4][0] * .665)
 
         
         elif attempt[1] == 'Right Middle':
           xLocationOnField = 31.1
           
-          if attempt[5][0] == 0:
+          if attempt[4][0] == 0:
             xForFieldGoal = 26.65
 
-          elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+          elif attempt[4][0] != 0:
+            xForFieldGoal = 26.65 + (attempt[4][0] * .665)
 
 
-        elif attempt[1] == 'College Right Hash':
+        elif attempt[1] == 'Right Hash':
           xLocationOnField = 35.55
           
-          if attempt[5][0] == 0:
+          if attempt[4][0] == 0:
             xForFieldGoal = 26.65
 
-          elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)    
+          elif attempt[4][0] != 0:
+            xForFieldGoal = 26.65 + (attempt[4][0] * .665)    
       
       elif location_choice == "2":
 
-        if attempt[1] == 'College Left Hash':
+        if attempt[1] == 'Left Hash':
           xLocationOnField = 17.75
 
-          if attempt[5][0] == 0:
+          if attempt[4][0] == 0:
             xForFieldGoal = 26.65
 
-          elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+          elif attempt[4][0] != 0:
+            xForFieldGoal = 26.65 + (attempt[4][0] * .665)
 
         elif attempt[1] == 'Left Middle':
           xLocationOnField = 22.2
           
-          if attempt[5][0] == 0:
+          if attempt[4][0] == 0:
             xForFieldGoal = 26.65
 
-          elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+          elif attempt[4][0] != 0:
+            xForFieldGoal = 26.65 + (attempt[4][0] * .665)
 
         elif attempt[1] == 'Middle':
           xLocationOnField = 0
@@ -243,7 +244,7 @@ def submit_form():
           yForFieldGoal = 0
           yPositionOnField = 0
 
-        elif attempt[1] == 'College Right Hash':
+        elif attempt[1] == 'Right Hash':
           xLocationOnField = 0
           xForFieldGoal = 0
           yForFieldGoal = 0
@@ -251,7 +252,7 @@ def submit_form():
 
       elif location_choice == "3":
 
-        if attempt[1] == 'College Left Hash':
+        if attempt[1] == 'Left Hash':
           xLocationOnField = 0
           xForFieldGoal = 0
           yForFieldGoal = 0
@@ -266,11 +267,11 @@ def submit_form():
         elif attempt[1] == 'Middle':
           xLocationOnField = 26.65
 
-          if attempt[5][0] == 0:
+          if attempt[4][0] == 0:
             xForFieldGoal = 26.65
 
-          elif attempt[5][0] != 0:
-            xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+          elif attempt[4][0] != 0:
+            xForFieldGoal = 26.65 + (attempt[4][0] * .665)
 
         elif attempt[1] == 'Right Middle':
           xLocationOnField = 0
@@ -278,7 +279,7 @@ def submit_form():
           yForFieldGoal = 0
           yPositionOnField = 0
 
-        elif attempt[1] == 'College Right Hash':
+        elif attempt[1] == 'Right Hash':
           xLocationOnField = 0
           xForFieldGoal = 0
           yForFieldGoal = 0
@@ -286,7 +287,7 @@ def submit_form():
 
       elif location_choice == "4":
           
-          if attempt[1] == 'College Left Hash':
+          if attempt[1] == 'Left Hash':
               xLocationOnField = 0
               xForFieldGoal = 0
               yForFieldGoal = 0
@@ -307,28 +308,28 @@ def submit_form():
           elif attempt[1] == 'Right Middle':
             xLocationOnField = 31.1
           
-            if attempt[5][0] == 0:
+            if attempt[4][0] == 0:
               xForFieldGoal = 26.65
 
-            elif attempt[5][0] != 0:
-              xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+            elif attempt[4][0] != 0:
+              xForFieldGoal = 26.65 + (attempt[4][0] * .665)
 
-          elif attempt[1] == 'College Right Hash':
+          elif attempt[1] == 'Right Hash':
               xLocationOnField = 35.55
 
-              if attempt[5][0] == 0:
+              if attempt[4][0] == 0:
                 xForFieldGoal = 26.65
 
-              elif attempt[5][0] != 0:
-                xForFieldGoal = 26.65 + (attempt[5][0] * .665)
+              elif attempt[4][0] != 0:
+                xForFieldGoal = 26.65 + (attempt[4][0] * .665)
       
 
-      if attempt[4] == 'make':
+      if attempt[3] == 'make':
         plotcolor = 'green'
         linestyle = 'solid'
         linewidth = 0.75
         
-      elif attempt[4] == 'miss':
+      elif attempt[3] == 'miss':
         plotcolor = 'red'
         linestyle = 'dotted'
         linewidth = 0.75

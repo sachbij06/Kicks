@@ -85,30 +85,30 @@ def show_results():
   
 
   for attempt in attempts:
-    avg_abs_value += abs(attempt[5][0])
-    aggregate_precision_scores += (attempt[5][0])
-    total_euclidean_distance += math.sqrt((abs(abs(attempt[5][0]) - 0) * abs(abs(attempt[5][0]) - 0)) + (abs(abs(attempt[5][1]) - 10) * abs(abs(attempt[5][1]) - 10)))
+    avg_abs_value += abs(attempt[4][0])
+    aggregate_precision_scores += (attempt[4][0])
+    total_euclidean_distance += math.sqrt((abs(abs(attempt[4][0]) - 0) * abs(abs(attempt[4][0]) - 0)) + (abs(abs(attempt[4][1]) - 10) * abs(abs(attempt[4][1]) - 10)))
     
     
     if attempt[1] == 'College Right Hash':
-      right_hash_precision_score += abs(attempt[5][0])
-      right_aggregate_precision_scores += (attempt[5][0])
+      right_hash_precision_score += abs(attempt[4][0])
+      right_aggregate_precision_scores += (attempt[4][0])
 
     elif attempt[1] == 'Right Middle':
-      right_middle_precision_score += abs(attempt[5][0])
-      right_middle_aggregate_precision_scores += (attempt[5][0])
+      right_middle_precision_score += abs(attempt[4][0])
+      right_middle_aggregate_precision_scores += (attempt[4][0])
 
     elif attempt[1] == 'College Left Hash':
-      left_hash_precision_score += abs(attempt[5][0])
-      left_aggregate_precision_scores += (attempt[5][0])
+      left_hash_precision_score += abs(attempt[4][0])
+      left_aggregate_precision_scores += (attempt[4][0])
 
     elif attempt[1] == 'Left Middle':
-      left_middle_precision_score += abs(attempt[5][0])
-      left_middle_aggregate_precision_scores += (attempt[5][0])
+      left_middle_precision_score += abs(attempt[4][0])
+      left_middle_aggregate_precision_scores += (attempt[4][0])
     
     elif attempt[1] == 'Middle':
-      middle_precision_score += abs(attempt[5][0])
-      middle_aggregate_precision_scores += (attempt[5][0])
+      middle_precision_score += abs(attempt[4][0])
+      middle_aggregate_precision_scores += (attempt[4][0])
       
       
     if attempt[4] == 'make':

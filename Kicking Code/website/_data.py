@@ -1,7 +1,7 @@
 import json
 
 
-stats_file = 'Week1Stats.json'
+stats_file = 'categorized_kicks.json'
 
 def get_data():
   with open(stats_file) as f:
