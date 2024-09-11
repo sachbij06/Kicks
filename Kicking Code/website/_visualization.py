@@ -83,7 +83,7 @@ def submit_form():
         avg_euclidean_distance = None
 
     # Plotting the stats
-    fig, ax = plt.subplots(figsize=(16, 10))
+    fig, ax = plt.subplots(figsize=(12, 10))
     plt.axis('off')  # Turns off the x and y axes
     
     # Display basic stats with Euclidean distance
