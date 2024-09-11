@@ -19,7 +19,6 @@ def submit_form():
     location_choice = request.form['location_choice'] if 'location_choice' in request.form else "1"
     distance_choice = request.form['distance_choice'] if 'distance_choice' in request.form else "1"
     
-
     attempts = _data.get_all_data()
 
     sum_of_precision_scores = 0
@@ -27,101 +26,53 @@ def submit_form():
     visualized_total_makes = 0
     sum_of_abs_value = 0
 
+    # Function to filter attempts based on the selected distance range
     def is_within_distance(attempt, distance_choice):
-      distance = attempt[0]  # Assuming attempt[0] is the distance
-      if distance_choice == "1":  # All Distances
-          return True
-      elif distance_choice == "2" and 20 <= distance <= 29:
-          return True
-      elif distance_choice == "3" and 30 <= distance <= 39:
-          return True
-      elif distance_choice == "4" and 40 <= distance <= 49:
-          return True
-      elif distance_choice == "5" and distance >= 50:
-          return True
-      return False
+        distance = attempt[0]  # Assuming attempt[0] is the distance
+        if distance_choice == "1":  # All Distances
+            return True
+        elif distance_choice == "2" and 20 <= distance <= 29:
+            return True
+        elif distance_choice == "3" and 30 <= distance <= 39:
+            return True
+        elif distance_choice == "4" and 40 <= distance <= 49:
+            return True
+        elif distance_choice == "5" and distance >= 50:
+            return True
+        return False
 
-        # Apply filters by location_choice and distance_choice
+    # Filter attempts by both location and distance
+    filtered_attempts = []
     for attempt in attempts:
-       if not is_within_distance(attempt, distance_choice):
-         continue  # Skip if the attempt is not within the selected distance
+        if is_within_distance(attempt, distance_choice):
+            if location_choice == "1":
+                filtered_attempts.append(attempt)
+            elif location_choice == "2" and attempt[1] in ["College Left Hash", "Left Middle"]:
+                filtered_attempts.append(attempt)
+            elif location_choice == "3" and attempt[1] == "Middle":
+                filtered_attempts.append(attempt)
+            elif location_choice == "4" and attempt[1] in ["College Right Hash", "Right Middle"]:
+                filtered_attempts.append(attempt)
 
-    if location_choice == "1":
-      for attempt in attempts:
-        sum_of_precision_scores += (attempt[5][0])
+    # Update visualized_total_attempts after filtering
+    visualized_total_attempts = len(filtered_attempts)
+
+    # Calculate the stats based on the filtered attempts
+    for attempt in filtered_attempts:
+        sum_of_precision_scores += attempt[5][0]
         sum_of_abs_value += abs(attempt[5][0])
-
         if attempt[4] == 'make':
-          visualized_total_makes += 1
-  
-    elif location_choice == "2":
-        visualized_total_attempts = 0
-        for attempt in attempts:
-
-          if attempt[1] == "College Left Hash":
-              sum_of_precision_scores += (attempt[5][0])
-              sum_of_abs_value += abs(attempt[5][0])
-              
-              visualized_total_attempts += 1
-
-          
-              if attempt[4] == 'make':
-                visualized_total_makes += 1
-
-          if attempt[1] == "Left Middle":
-              sum_of_precision_scores += (attempt[5][0])
-              sum_of_abs_value += abs(attempt[5][0])
-              
-              visualized_total_attempts += 1
-
-          
-              if attempt[4] == 'make':
-                visualized_total_makes += 1
-
-    elif location_choice == "3":
-
-      visualized_total_attempts = 0
-      for attempt in attempts:
-        
-        if attempt[1] == "Middle":
-
-          sum_of_precision_scores += (attempt[5][0])
-          sum_of_abs_value += abs(attempt[5][0])
-
-          visualized_total_attempts += 1
-
-          if attempt[4] == 'make':
             visualized_total_makes += 1
 
-    elif location_choice == "4":
-      visualized_total_attempts = 0
-      for attempt in attempts:
-        
-        if attempt[1] == "College Right Hash":
-          sum_of_precision_scores += (attempt[5][0])
-          sum_of_abs_value += abs(attempt[5][0])
-
-          visualized_total_attempts += 1
-
-          
-          if attempt[4] == 'make':
-            visualized_total_makes += 1
-
-
-        if attempt[1] == "Right Middle":
-              sum_of_precision_scores += (attempt[5][0])
-              sum_of_abs_value += abs(attempt[5][0])
-              
-              visualized_total_attempts += 1
-
-          
-              if attempt[4] == 'make':
-                visualized_total_makes += 1
-
-
-    visualized_pct_made = visualized_total_makes / visualized_total_attempts * 100
-    visualized_directional = sum_of_precision_scores / visualized_total_attempts
-    visualized_deviation_from_middle = sum_of_abs_value / visualized_total_attempts
+    # If there are no attempts after filtering, avoid division by zero
+    if visualized_total_attempts > 0:
+        visualized_pct_made = visualized_total_makes / visualized_total_attempts * 100
+        visualized_directional = sum_of_precision_scores / visualized_total_attempts
+        visualized_deviation_from_middle = sum_of_abs_value / visualized_total_attempts
+    else:
+        visualized_pct_made = 0
+        visualized_directional = 0
+        visualized_deviation_from_middle = 0
     
 
     fig, ax = plt.subplots(figsize=(16, 10))

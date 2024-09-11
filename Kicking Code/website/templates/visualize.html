@@ -60,7 +60,7 @@
     }
     
     button:hover {
-      background-color: #181818;
+      background-color: #575757;
     }
 
     input[type="submit"] {
@@ -286,6 +286,28 @@
       display: inline-block;
     }
 
+    button:hover {
+      background-color: #575757;
+    }
+
+    .active {
+      background-color: #070814 !important;
+      color: white !important;
+    }
+
+    /* Specific button styles to retain normal appearance when not active */
+    button {
+      background-color: #292929;
+      color: #ffffff;
+      border: none;
+      padding: 15px 24px;
+      text-align: center;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
   </style>
 
 </head>
@@ -318,15 +340,16 @@
   <!-- Right Sidebar -->
   <div class="right-sidebar" id="myRightSidebar">
     <h2>Sort</h2>
+
     <!-- Distance Dropdown -->
     <div class="sort-option">
       <button onclick="toggleDropdown('distanceDropdown')">Distance</button>
       <div id="distanceDropdown" class="dropdown-content-right" style="display: block;">
-        <button onclick="setDistance(1)">All</button>
-        <button onclick="setDistance(2)">20-29</button>
-        <button onclick="setDistance(3)">30-39</button>
-        <button onclick="setDistance(4)">40-49</button>
-        <button onclick="setDistance(5)">50+</button>
+        <button onclick="selectOption(this, 'distance', 1)">All</button>
+        <button onclick="selectOption(this, 'distance', 2)">20-29</button>
+        <button onclick="selectOption(this, 'distance', 3)">30-39</button>
+        <button onclick="selectOption(this, 'distance', 4)">40-49</button>
+        <button onclick="selectOption(this, 'distance', 5)">50+</button>
       </div>
     </div>
 
@@ -334,21 +357,21 @@
     <div class="sort-option">
       <button onclick="toggleDropdown('locationDropdown')">Location</button>
       <div id="locationDropdown" class="dropdown-content-right" style="display: block;">
-        <button onclick="setLocation(1)">All</button>
-        <button onclick="setLocation(2)">Left</button>
-        <button onclick="setLocation(3)">Middle</button>
-        <button onclick="setLocation(4)">Right</button>
+        <button onclick="selectOption(this, 'location', 1)">All</button>
+        <button onclick="selectOption(this, 'location', 2)">Left</button>
+        <button onclick="selectOption(this, 'location', 3)">Middle</button>
+        <button onclick="selectOption(this, 'location', 4)">Right</button>
       </div>
     </div>
 
-    <div class="sort-option">
+    <div class ="sort-option">
       <button onclick="toggleDropdown('timeframeDropdown')">Timeframe - Coming Soon</button>
-    </div>
+   </div>
 
-    <div style="text-align:center; margin-top:20px;"></div>
-      <button onclick="submitForm()">Submit</button> <!-- You can place the submit button here -->
+    <!-- Submit Button -->
+    <div style="text-align:center; margin-top:20px;">
+      <button onclick="submitForm()">Submit</button>
     </div>
-  </div>
   </div>
 
   <div class="content">
@@ -363,17 +386,22 @@
     let selectedLocation = null;
     let selectedDistance = null;
 
-    // Store location_choice
-    function setLocation(location_choice) {
-      selectedLocation = location_choice;
+    // Function to handle both location and distance selection
+    function selectOption(button, type, value) {
+      // Deselect previous button and highlight the new one
+      const buttons = button.parentElement.querySelectorAll('button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      // Set selected value based on type (location or distance)
+      if (type === 'location') {
+        selectedLocation = value;
+      } else if (type === 'distance') {
+        selectedDistance = value;
+      }
     }
 
-    // Store distance_choice
-    function setDistance(distance_choice) {
-      selectedDistance = distance_choice;
-    }
-
-    // Function to submit the form with both location and distance choices
+    // Submit form with both location and distance
     function submitForm() {
       if (selectedLocation === null || selectedDistance === null) {
         alert("Please select both a location and distance before submitting.");
