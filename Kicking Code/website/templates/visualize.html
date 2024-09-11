@@ -321,7 +321,7 @@
   <div class="sidebar" id="mySidebar">
     <button onclick="toggleDropdown('fieldGoalDropdown')">Field Goal     ▼</button>
     <div id="fieldGoalDropdown" class="dropdown-content" style="display: block;">
-      <button>Basic Stats</button>
+      <button onclick="resetStats()">Basic Stats</button> <!-- Resets to the overall stats -->
       <button>Advanced Stats</button>
       <button>AI Insights</button>
     </div>
@@ -395,6 +395,27 @@
       } else if (type === 'distance') {
         selectedDistance = value;
       }
+    }
+    
+    function resetStats() {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/visualize';
+
+      const locationField = document.createElement('input');
+      locationField.type = 'hidden';
+      locationField.name = 'location_choice';
+      locationField.value = 1;  // Resets to all locations
+
+      const distanceField = document.createElement('input');
+      distanceField.type = 'hidden';
+      distanceField.name = 'distance_choice';
+      distanceField.value = 1;  // Resets to all distances
+
+      form.appendChild(locationField);
+      form.appendChild(distanceField);
+      document.body.appendChild(form);
+      form.submit();
     }
 
     // Submit form with both location and distance
