@@ -9,16 +9,16 @@ app = Flask(__name__)
 visualize = Blueprint("visualize", __name__, static_folder="static", template_folder="templates")
 
 
-@visualize.route('/')
-def render():
-  return render_template('visualize.html')
 
 
-@visualize.route('/submit', methods=['GET', 'POST'])
+@visualize.route('/visualize', methods=['GET', 'POST'])
 def submit_form():
   if request.method == 'POST':
 
-    visual_choice = request.form['visual_choice']
+    
+    location_choice = request.form['location_choice'] if 'location_choice' in request.form else "1"
+    distance_choice = request.form['distance_choice'] if 'distance_choice' in request.form else "1"
+    
 
     attempts = _data.get_all_data()
 
@@ -27,8 +27,26 @@ def submit_form():
     visualized_total_makes = 0
     sum_of_abs_value = 0
 
+    def is_within_distance(attempt, distance_choice):
+      distance = attempt[0]  # Assuming attempt[0] is the distance
+      if distance_choice == "1":  # All Distances
+          return True
+      elif distance_choice == "2" and 20 <= distance <= 29:
+          return True
+      elif distance_choice == "3" and 30 <= distance <= 39:
+          return True
+      elif distance_choice == "4" and 40 <= distance <= 49:
+          return True
+      elif distance_choice == "5" and distance >= 50:
+          return True
+      return False
 
-    if visual_choice == "1":
+        # Apply filters by location_choice and distance_choice
+    for attempt in attempts:
+       if not is_within_distance(attempt, distance_choice):
+         continue  # Skip if the attempt is not within the selected distance
+
+    if location_choice == "1":
       for attempt in attempts:
         sum_of_precision_scores += (attempt[5][0])
         sum_of_abs_value += abs(attempt[5][0])
@@ -36,8 +54,7 @@ def submit_form():
         if attempt[4] == 'make':
           visualized_total_makes += 1
   
-
-    elif visual_choice == "2":
+    elif location_choice == "2":
         visualized_total_attempts = 0
         for attempt in attempts:
 
@@ -61,8 +78,7 @@ def submit_form():
               if attempt[4] == 'make':
                 visualized_total_makes += 1
 
-
-    elif visual_choice == "3":
+    elif location_choice == "3":
 
       visualized_total_attempts = 0
       for attempt in attempts:
@@ -77,8 +93,7 @@ def submit_form():
           if attempt[4] == 'make':
             visualized_total_makes += 1
 
-
-    elif visual_choice == "4":
+    elif location_choice == "4":
       visualized_total_attempts = 0
       for attempt in attempts:
         
@@ -167,6 +182,8 @@ def submit_form():
 
     
     for attempt in attempts:
+      if not is_within_distance(attempt, distance_choice):
+        continue  # Skip if the attempt is not within the selected distance
       xLocationOnField = 0 #xLocationOnField initialization
       xForFieldGoal = 0 #xForFieldGoal initialization
       
@@ -179,7 +196,7 @@ def submit_form():
       linewidth = 1
       
 
-      if visual_choice == "1":
+      if location_choice == "1":
 
         if attempt[1] == 'College Left Hash':
           xLocationOnField = 17.75
@@ -230,7 +247,7 @@ def submit_form():
           elif attempt[5][0] != 0:
             xForFieldGoal = 26.65 + (attempt[5][0] * .665)    
       
-      elif visual_choice == "2":
+      elif location_choice == "2":
 
         if attempt[1] == 'College Left Hash':
           xLocationOnField = 17.75
@@ -268,7 +285,7 @@ def submit_form():
           yForFieldGoal = 0
           yPositionOnField = 0
 
-      elif visual_choice == "3":
+      elif location_choice == "3":
 
         if attempt[1] == 'College Left Hash':
           xLocationOnField = 0
@@ -303,7 +320,7 @@ def submit_form():
           yForFieldGoal = 0
           yPositionOnField = 0
 
-      elif visual_choice == "4":
+      elif location_choice == "4":
           
           if attempt[1] == 'College Left Hash':
               xLocationOnField = 0
@@ -340,7 +357,6 @@ def submit_form():
 
               elif attempt[5][0] != 0:
                 xForFieldGoal = 26.65 + (attempt[5][0] * .665)
-
       
 
       if attempt[4] == 'make':
@@ -362,9 +378,9 @@ def submit_form():
     
       # line between field and field goal
       ax.plot([xLocationOnField, xForFieldGoal], [yPositionOnField, yForFieldGoal], color = plotcolor , linewidth = linewidth, linestyle = linestyle)
-
     plt.plot()
     plt.savefig('Kicking Code/website/static/chart.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
+    
     return render_template('visualize.html', get_plot = True, plot_url='static/chart.png', attempts = attempts)
     
   else:

@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 # general stats
 avg_euclidean_distance = total_euclidean_distance / total_attempts
 average_precision_score = avg_abs_value / total_attempts

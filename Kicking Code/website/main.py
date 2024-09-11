@@ -3,6 +3,8 @@ from session import session
 from _visualization import visualize
 from _stats import stats
 
+import webbrowser
+
 
 app = Flask(__name__)
 app.register_blueprint(session, url_prefix="")
@@ -31,4 +33,7 @@ def visualization():
     return render_template('visualize.html')
 
 if __name__ == "__main__":
-    app.run('127.0.0.1', 4000, debug = True)
+    webbrowser.open("http://127.0.0.1:4000/visualize")
+    
+    # Run the Flask app
+    app.run('127.0.0.1', 4000, debug=True)

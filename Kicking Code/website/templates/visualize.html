@@ -8,10 +8,10 @@
   <style>
 
     *{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     
     /* Navigation */
     nav {
@@ -37,12 +37,12 @@
       background-color: #121212;
       color: #ffffff;
       font-family: 'Roboto', sans-serif;
-      text-align: center;
     }
     
     h1 {
       color: #ffffff;
       margin-bottom: 20px;
+      text-align: center;
     }
     
     /* Button Styles */
@@ -88,14 +88,146 @@
     /* Content Styles */
     .content {
       padding: 20px;
+      margin-left: 0px;
+      align-items: center;
     }
     
+/* Sidebar Styles */
+.sidebar {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #1e1e1e;
+  padding-top: 60px; /* Pushes sidebar below the navigation */
+  transition: 0.3s;
+  overflow: auto;
+}
+
+.sidebar a, .sidebar button {
+  padding: 15px 20px; /* Add padding inside the buttons */
+  margin-bottom: 10px; /* Adds space between the buttons */
+  text-decoration: none;
+  font-size: 18px;
+  color: #ffffff;
+  display: block;
+  transition: 0.3s;
+  text-align: left;
+  border: none;
+  background-color: #292929; /* Ensure buttons have a background color */
+  cursor: pointer;
+  width: 100%; /* Ensures button takes up full sidebar width */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+  border-radius: 0; /* Removes rounded edges */
+}
+
+.sidebar a:hover, .sidebar button:hover {
+  background-color: #575757;
+}
+
+/* Dropdown content */
+.dropdown-content {
+  display: none;
+  background-color: #333;
+  padding-left: 10px;
+}
+
+.dropdown-content button {
+  background-color: #444;
+  color: white;
+  padding: 20px;
+  margin-bottom: 10px; /* Adds space between dropdown buttons */
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  display: block;
+  transition: background-color 0.3s;
+  width: 100%; /* Ensures dropdown buttons take up full width */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+  border-radius: 0; /* Removes rounded edges */
+}
+
+.dropdown-content button:hover {
+  background-color: #555;
+}
+
+/* Right Sidebar Styles */
+.right-sidebar {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: #1e1e1e;
+  padding-top: 80px;
+  padding-left: 20px;
+  transition: 0.3s;
+  overflow: auto;
+}
+
+.right-sidebar h2 {
+  color: #ffffff;
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.sort-option button {
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #ffffff;
+  display: block;
+  transition: 0.3s;
+  text-align: left;
+  border: none;
+  background-color: #292929;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+.sort-option button:hover {
+  background-color: #575757;
+}
+
+/* Dropdown content for the right sidebar */
+.dropdown-content-right {
+  display: none;
+  background-color: #333;
+  padding-left: 10px;
+}
+
+.dropdown-content-right button {
+  background-color: #444;
+  color: white;
+  padding: 10px;
+  margin-bottom: 5px;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  display: block;
+  transition: background-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+.dropdown-content-right button:hover {
+  background-color: #555;
+}
+
+
+
+
     /* Form Styles */
     form {
       background-color: #121212;
       border-radius: 8px;
       padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       max-width: 1000px;
       margin: 0 auto;
     }
@@ -138,20 +270,23 @@
       border: 3px solid #000000;
       border-radius: 10px;
     }
-
-
+    .gray-box {
+      display: flex; /* Enables flexbox */
+      justify-content: center; /* Centers the image horizontally */
+      align-items: center; /* Centers the image vertically (if you want vertical centering as well) */
+      margin-top: 20px; /* Optional: Add some margin to space it from other elements */
+    }
     .gray-box img {
       border-radius: 30px;
       max-width: 100%;
       height: auto;
       display: block;
       margin: 0 auto;
-      padding: 0px;
+      padding: px;
       display: inline-block;
-      box-shadow: 0 30px 30px rgba(88, 88, 88, 0.3);
     }
 
-    </style>
+  </style>
 
 </head>
 <body>
@@ -164,27 +299,111 @@
     <a href="/comingsoon">Coming Soon</a>
   </nav>
   
-  <div class = "content">
-    
-  <h1>View Your Kicks</h1>
+  <!-- Left Sidebar -->
+  <div class="sidebar" id="mySidebar">
+    <button onclick="toggleDropdown('fieldGoalDropdown')">Field Goal     ▼</button>
+    <div id="fieldGoalDropdown" class="dropdown-content" style="display: block;">
+      <button>Basic Stats</button>
+      <button>Advanced Stats</button>
+      <button>AI Insights</button>
+    </div>
+    <button onclick="toggleDropdown('kickoffDropdown')">Kickoff ▼</button>
+    <div id="kickoffDropdown" class="dropdown-content" style="display: block;">
+      <button>Basic Stats</button>
+      <button>Advanced Stats</button>
+      <button>AI Insights</button>
+    </div>
+  </div>
+  
+  <!-- Right Sidebar -->
+  <div class="right-sidebar" id="myRightSidebar">
+    <h2>Sort</h2>
+    <!-- Distance Dropdown -->
+    <div class="sort-option">
+      <button onclick="toggleDropdown('distanceDropdown')">Distance</button>
+      <div id="distanceDropdown" class="dropdown-content-right" style="display: block;">
+        <button onclick="setDistance(1)">All</button>
+        <button onclick="setDistance(2)">20-29</button>
+        <button onclick="setDistance(3)">30-39</button>
+        <button onclick="setDistance(4)">40-49</button>
+        <button onclick="setDistance(5)">50+</button>
+      </div>
+    </div>
 
-  <form id="myForm" action="/submit" method="POST">
-    <button name="visual_choice" type="submit" value="1">Plot all Kicks</button>
-    <button name="visual_choice" type="submit" value="2">Plot Left Kicks</button>
-    <button name="visual_choice" type="submit" value="3">Plot Middle Kicks</button>
-    <button name="visual_choice" type="submit" value="4">Plot Right Kicks</button>
-  </form>
-</div>
+    <!-- Location Dropdown -->
+    <div class="sort-option">
+      <button onclick="toggleDropdown('locationDropdown')">Location</button>
+      <div id="locationDropdown" class="dropdown-content-right" style="display: block;">
+        <button onclick="setLocation(1)">All</button>
+        <button onclick="setLocation(2)">Left</button>
+        <button onclick="setLocation(3)">Middle</button>
+        <button onclick="setLocation(4)">Right</button>
+      </div>
+    </div>
 
-  <div class="gray-box">
-      <img src= {{plot_url}} alt = "Chart cannot be displayed">
+    <div class="sort-option">
+      <button onclick="toggleDropdown('timeframeDropdown')">Timeframe - Coming Soon</button>
+    </div>
+
+    <div style="text-align:center; margin-top:20px;"></div>
+      <button onclick="submitForm()">Submit</button> <!-- You can place the submit button here -->
+    </div>
+  </div>
   </div>
 
-  <br><br>
+  <div class="content">
+    <h1>Field Goal</h1>
+  </div>
+
+  <div class="gray-box">
+      <img src="{{plot_url}}" alt="Chart cannot be displayed">
+  </div>
 
   <script>
-    function reset() {
-      document.getElementById("myForm").reset();
+    let selectedLocation = null;
+    let selectedDistance = null;
+
+    // Store location_choice
+    function setLocation(location_choice) {
+      selectedLocation = location_choice;
+    }
+
+    // Store distance_choice
+    function setDistance(distance_choice) {
+      selectedDistance = distance_choice;
+    }
+
+    // Function to submit the form with both location and distance choices
+    function submitForm() {
+      if (selectedLocation === null || selectedDistance === null) {
+        alert("Please select both a location and distance before submitting.");
+        return;
+      }
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/visualize';
+
+      const locationField = document.createElement('input');
+      locationField.type = 'hidden';
+      locationField.name = 'location_choice';
+      locationField.value = selectedLocation;
+
+      const distanceField = document.createElement('input');
+      distanceField.type = 'hidden';
+      distanceField.name = 'distance_choice';
+      distanceField.value = selectedDistance;
+
+      form.appendChild(locationField);
+      form.appendChild(distanceField);
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+    // Toggle dropdowns
+    function toggleDropdown(dropdownId) {
+      const dropdown = document.getElementById(dropdownId);
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     }
   </script>
 </body>
