@@ -33,7 +33,7 @@ def visualization():
     return render_template('visualize.html')
 
 if __name__ == "__main__":
-    webbrowser.open("http://127.0.0.1:4000/visualize")
+    webbrowser.open("http://127.0.0.1:4000/home")
     
     # Run the Flask app
     app.run('127.0.0.1', 4000, debug=True)
