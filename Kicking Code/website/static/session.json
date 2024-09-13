@@ -1,0 +1,11 @@
+[
+    {
+        "session": "Session 1",
+        "date": "2024-09-12",
+        "avg_precision": 1.4950419527078571,
+        "avg_height": 11.093516092814372,
+        "fg_percentage": 100.0,
+        "fg_attempts": 2,
+        "fg_makes": 2
+    }
+]
