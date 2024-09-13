@@ -99,7 +99,7 @@ def submit_session():
 
             # Determine "make" or "miss"
             make_or_miss = "make" if -8 < precision < 8 and height > 0 else "miss"
-
+            
             # Build the data structure for this kick
             kick_result = [
                 distance,               # Distance in yards
