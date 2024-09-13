@@ -87,9 +87,11 @@
     /* Content Styles */
     .content {
       padding: 20px;
-      margin-left: 0px;
+      margin-left: 250px;
       align-items: center;
     }
+
+
     
 /* Sidebar Styles */
 .sidebar {
@@ -153,6 +155,7 @@
 
 /* Right Sidebar Styles */
 .right-sidebar {
+  display: none;
   height: 100%;
   width: 250px;
   position: fixed;
@@ -306,6 +309,42 @@
       transition: background-color 0.3s ease;
     }
 
+      /* Sessions Container */
+      .sessions-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+
+    }
+
+    .session-box {
+      background-color: #292929;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 10px;
+      width: calc(25% - 40px); /* 4 boxes per row */
+      box-sizing: border-box;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .session-box:hover {
+      background-color: #575757;
+    }
+
+    .session-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .session-stat {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
   </style>
 
 </head>
@@ -361,10 +400,15 @@
     </div>
     
     <!-- Timeframe - Coming Soon -->
-
     <div class ="sort-option">
-      <button onclick="toggleDropdown('timeframeDropdown')">Timeframe - Coming Soon</button>
-   </div>
+      <button onclick="toggleDropdown('timeframeDropdown')">Timeframe</button>
+      <div id="timeframeDropdown" class="dropdown-content-right">
+        <button onclick="selectOption(this, 'timeframe', 1)">Session</button>
+        <button onclick="selectOption(this, 'timeframe', 2)">Week</button>
+        <button onclick="selectOption(this, 'timeframe', 3)">Month</button>
+      </div>
+    </div>
+   
 
     <!-- Submit Button -->
     <div style="text-align:center; margin-top:20px;">
@@ -375,12 +419,12 @@
 
 
   <div class="content">
-    <h1>Field Goal</h1>
+    <h1>Field Goal Sessions</h1>
+    <div class="sessions-container" id="sessionsContainer"></div>
   </div>
 
   <div class="gray-box">
     <img id="dynamicImage" src="{{ plot_url }}" alt="Image not available" style="display: none;">
-    <h2 id="defaultText">Get started by clicking 'Basic Stats'.</h2>
 </div>
 
 
@@ -472,12 +516,45 @@
         defaultText.style.display = "none";
     };
 
-    img.onerror = function() {
-        // If the image doesn't load, keep it hidden and show the default text
-        img.style.display = "none";
-        defaultText.style.display = "block";
-    };
 
+    function loadSessionData() {
+      fetch('static/session.json')
+    .then(response => response.json())
+    .then(data => {
+      const sessionsData = data;
+      console.log(data);
+      const sessionsContainer = document.getElementById('sessionsContainer');
+
+      // Loop over each session and create the session boxes
+      sessionsData.forEach((session, index) => {
+        const sessionBox = document.createElement('div');
+        sessionBox.className = 'session-box';
+
+        sessionBox.innerHTML = `
+          <div class="session-title">${session?.session} - ${session.date}</div>
+
+          <div class="session-stat">FG %: ${session.fg_percentage + '%'} - ${session.fg_makes}/${session.fg_attempts}</div>
+          <div class="session-stat">Avg Precision: ${session.avg_precision.toFixed(2)}</div>
+          <div class="session-stat">Avg Height: ${session.avg_height.toFixed(2)}</div>
+          
+        `;
+          
+          sessionsContainer.appendChild(sessionBox);
+          sessionBox.addEventListener('click', showRightSidebar);
+        });
+      })
+      .catch(error => {
+        console.error('Error loading session data:', error);
+      });
+}
+
+function showRightSidebar() {
+      const rightSidebar = document.getElementById('myRightSidebar');
+      rightSidebar.style.display = 'block';
+    }
+
+
+document.addEventListener('DOMContentLoaded', loadSessionData);
 
   </script>
 </body>

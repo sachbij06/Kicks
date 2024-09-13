@@ -22,7 +22,8 @@ def submit_form():
     visualized_total_attempts = 0
     visualized_total_makes = 0
     sum_of_abs_value = 0
-    sum_of_euclidean_distances = 0  # To calculate Euclidean distance
+    sum_of_euclidean_distances = 0
+    sum_of_heights = 0
 
     # Function to filter attempts based on the selected distance range
     def is_within_distance(attempt, distance_choice):
@@ -60,6 +61,7 @@ def submit_form():
         for attempt in filtered_attempts:
             sum_of_precision_scores += attempt[4][0]
             sum_of_abs_value += abs(attempt[4][0])
+            sum_of_heights += attempt[4][1]
             if attempt[3] == 'make':
                 visualized_total_makes += 1
 
@@ -68,6 +70,7 @@ def submit_form():
             distance_height_score = attempt[4][1]  # y-coordinate
             euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)
             sum_of_euclidean_distances += euclidean_distance
+            avg_height = sum_of_heights / visualized_total_attempts
 
         # Calculate averages
         visualized_pct_made = visualized_total_makes / visualized_total_attempts * 100
@@ -80,6 +83,7 @@ def submit_form():
         visualized_directional = 0
         visualized_deviation_from_middle = 0
         avg_euclidean_distance = None
+        avg_height = 0
 
     # Plotting the stats only if there are filtered attempts
     fig, ax = plt.subplots(figsize=(15, 10))
@@ -87,11 +91,11 @@ def submit_form():
 
     if visualized_total_attempts > 0:
         # Display basic stats with Euclidean distance
-        ax.text(3, 70, f"FG: {visualized_total_makes}/{visualized_total_attempts}\n"
-                        f"% Made: {visualized_pct_made:.2f}%\n"
-                        f"Average Deviation from Middle: ±{visualized_deviation_from_middle:.2f}\n"
-                        f"Directional: {visualized_directional:.2f}\n"
-                        f"Average Euclidean Distance: {avg_euclidean_distance:.2f}",
+        ax.text(3, 70, f"FG: {visualized_pct_made:.2f}%  -  {visualized_total_makes}/{visualized_total_attempts}\n"
+                        f"Precision: ±{visualized_deviation_from_middle:.2f}\n"
+                        f"Average Height: {avg_height:.2f}\n"
+                        f"Directional Bias: {visualized_directional:.2f}\n"
+                        f"Average Euclidean Distance: {avg_euclidean_distance:.2f}\n",
                 fontsize=12, color='white')
     else:
         # Display no data message

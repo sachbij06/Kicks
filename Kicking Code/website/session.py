@@ -7,6 +7,7 @@ session = Blueprint("session", __name__, static_folder="static", template_folder
 
 # File path to store the session data in JSON
 JSON_FILE_PATH = "kicking_data.json"
+SESSION_FILE_PATH = "Kicking Code/website/static/session.json"
 
 def write_to_json(data, filepath):
     """Write data to a JSON file, either appending or creating a new file."""
@@ -21,6 +22,59 @@ def write_to_json(data, filepath):
         with open(filepath, 'w') as file:
             json.dump([data], file, indent=4)
 
+def calculate_session_stats(kicks_data):
+    """Calculate session average precision, height, and FG% made."""
+    total_precision = 0
+    total_height = 0
+    makes = 0
+    total_attempts = len(kicks_data)
+
+    for kick in kicks_data:
+        precision = kick[4][0]
+        height = kick[4][1]
+        make_or_miss = kick[3]
+
+        total_precision += abs(precision)
+        total_height += height
+
+        if make_or_miss == "make":
+            makes += 1
+
+    avg_precision = total_precision / total_attempts
+    avg_height = total_height / total_attempts
+    fg_percentage = (makes / total_attempts) * 100 if total_attempts > 0 else 0
+
+    return avg_precision, avg_height, fg_percentage, total_attempts, makes
+
+def write_session_summary(filepath):
+    """Reads kicking data and writes a summary of each session."""
+    try:
+        with open(filepath, 'r') as file:
+            kicks_data = json.load(file)
+
+
+        # Iterate through each session
+        for i, session in enumerate(kicks_data):
+            session_date = session[0][2]  # Assuming all kicks in a session share the same date
+            avg_precision, avg_height, fg_percentage, total_attempts, makes = calculate_session_stats(session)
+
+            # Create session summary with session number
+            session_result = {
+                "session": f"Session {i + 1}",
+                "date": session_date,
+                "avg_precision": avg_precision,
+                "avg_height": avg_height,
+                "fg_percentage": fg_percentage,
+                "fg_attempts": total_attempts,
+                "fg_makes": makes
+            }
+
+
+        # Write the session summary to session.json
+        write_to_json(session_result, SESSION_FILE_PATH)
+
+    except FileNotFoundError:
+        print("JSON file not found.")
 
 @session.route('/submit-session', methods=['POST'])
 def submit_session():
@@ -45,7 +99,7 @@ def submit_session():
 
             # Determine "make" or "miss"
             make_or_miss = "make" if -8 < precision < 8 and height > 0 else "miss"
-
+            
             # Build the data structure for this kick
             kick_result = [
                 distance,               # Distance in yards
@@ -58,11 +112,14 @@ def submit_session():
             # Append to session results
             session_results.append(kick_result)
 
-        # Write the session data to a JSON file
+        # Write the session data to the kicking_data.json file
         write_to_json(session_results, JSON_FILE_PATH)
 
         # After writing the session data, categorize it into buckets
         categorize_kicks_into_buckets(JSON_FILE_PATH)
+
+        # Generate session summary data for session.json
+        write_session_summary(JSON_FILE_PATH)
 
         # Return a success message
         return jsonify({"status": "success", "message": "Data received and stored"}), 200
@@ -125,9 +182,6 @@ def categorize_kicks_into_buckets(filepath):
                         buckets["fg50_plus_made"].append(kick)
                     else:
                         buckets["fg50_plus_missed"].append(kick)
-
-        # You can now work with the `buckets` dictionary, or store it in another JSON file if needed
-        print("Buckets:", buckets)
 
         # Optionally, write the categorized buckets to a new JSON file
         with open("categorized_kicks.json", 'w') as outfile:
