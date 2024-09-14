@@ -7,7 +7,9 @@ session = Blueprint("session", __name__, static_folder="static", template_folder
 
 # File path to store the session data in JSON
 JSON_FILE_PATH = "kicking_data.json"
-SESSION_FILE_PATH = "Kicking Code/website/static/session.json"
+
+
+
 
 def write_to_json(data, filepath):
     """Write data to a JSON file, either appending or creating a new file."""
@@ -17,10 +19,16 @@ def write_to_json(data, filepath):
             file_data.append(data)       # Append the new data
             file.seek(0)                 # Move the file pointer to the beginning
             json.dump(file_data, file, indent=4)
+
     except FileNotFoundError:
         # If the file does not exist, create it and write the data
+
         with open(filepath, 'w') as file:
             json.dump([data], file, indent=4)
+
+
+
+
 
 def calculate_session_stats(kicks_data):
     """Calculate session average precision, height, and FG% made."""
@@ -46,12 +54,16 @@ def calculate_session_stats(kicks_data):
 
     return avg_precision, avg_height, fg_percentage, total_attempts, makes
 
+
+
+
 def write_session_summary(filepath):
     """Reads kicking data and writes a summary of each session."""
     try:
         with open(filepath, 'r') as file:
             kicks_data = json.load(file)
 
+        all_session_results = []
 
         # Iterate through each session
         for i, session in enumerate(kicks_data):
@@ -66,12 +78,15 @@ def write_session_summary(filepath):
                 "avg_height": avg_height,
                 "fg_percentage": fg_percentage,
                 "fg_attempts": total_attempts,
-                "fg_makes": makes
+                "fg_makes": makes,
+                "kicks": session
             }
 
+            all_session_results.append(session_result)
 
-        # Write the session summary to session.json
-        write_to_json(session_result, SESSION_FILE_PATH)
+         # Write the session summary to session.json
+        with open("Kicking Code/website/static/session.json", 'w') as outfile:
+            json.dump(all_session_results, outfile, indent=4)
 
     except FileNotFoundError:
         print("JSON file not found.")
@@ -84,7 +99,7 @@ def submit_session():
         session_date = data['sessionDate']
 
         kicks_data = data['kicksData']
-        session_results = []  # To store the processed data for the session
+        session_results = []  # To store the processed data for the session      
 
         # Process each kick and prepare the result structure
         for kick in kicks_data:
@@ -109,7 +124,6 @@ def submit_session():
                 [precision, height]     # Precision and height (distance score)
             ]
 
-            # Append to session results
             session_results.append(kick_result)
 
         # Write the session data to the kicking_data.json file

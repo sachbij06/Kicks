@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, Blueprint
 import _data, math
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+import json  # Import json module to read session data
 
 app = Flask(__name__)
 visualize = Blueprint("visualize", __name__, static_folder="static", template_folder="templates")
@@ -10,12 +11,25 @@ visualize = Blueprint("visualize", __name__, static_folder="static", template_fo
 @visualize.route('/visualize', methods=['GET', 'POST'])
 def submit_form():
   if request.method == 'POST':
-    # Get form choices, no need for advanced stats toggle
+    # Check if 'session_index' is in the form data
+    session_index = request.form.get('session_index', None)
     location_choice = request.form.get('location_choice', "1")
     distance_choice = request.form.get('distance_choice', "1")
 
-    # Fetch all the attempts data
-    attempts = _data.get_all_data()
+    if session_index is not None:
+        # Handle visualization for the specific session
+        session_index = int(session_index)
+        # Load the sessions data
+        with open('Kicking Code/website/static/session.json', 'r') as f:
+            sessions_data = json.load(f)
+        # Get the specific session's kicks
+        session = sessions_data[session_index]
+        attempts = session['kicks']
+    else:
+        # Fetch all the attempts data
+        attempts = _data.get_all_data()
+
+    # Now, regardless of whether attempts are from a session or all data, we can proceed to apply filters
 
     # Initialize metrics
     sum_of_precision_scores = 0
@@ -53,6 +67,8 @@ def submit_form():
             elif location_choice == "4" and attempt[1] in ["Right Hash", "Right Middle"]:
                 filtered_attempts.append(attempt)
 
+    # Now process the filtered_attempts
+
     # Check if there are any filtered attempts
     visualized_total_attempts = len(filtered_attempts)
 
@@ -70,8 +86,7 @@ def submit_form():
             distance_height_score = attempt[4][1]  # y-coordinate
             euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)
             sum_of_euclidean_distances += euclidean_distance
-            avg_height = sum_of_heights / visualized_total_attempts
-
+        avg_height = sum_of_heights / visualized_total_attempts
         # Calculate averages
         visualized_pct_made = visualized_total_makes / visualized_total_attempts * 100
         visualized_directional = sum_of_precision_scores / visualized_total_attempts
@@ -84,6 +99,8 @@ def submit_form():
         visualized_deviation_from_middle = 0
         avg_euclidean_distance = None
         avg_height = 0
+
+    # Proceed to generate the plot as before, using filtered_attempts
 
     # Plotting the stats only if there are filtered attempts
     fig, ax = plt.subplots(figsize=(15, 10))
@@ -150,7 +167,7 @@ def submit_form():
       ax.plot([38.65, 41.3], [yard_line, yard_line], color='white', linewidth=0.25)
 
     
-    for attempt in attempts:
+    for attempt in filtered_attempts:
       if not is_within_distance(attempt, distance_choice):
         continue  # Skip if the attempt is not within the selected distance
       xLocationOnField = 0 #xLocationOnField initialization

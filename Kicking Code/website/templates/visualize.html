@@ -42,6 +42,8 @@
     h1 {
       color: #ffffff;
       text-align: center;
+      margin-bottom: 25px;
+      margin-top: 25px;
     }
     
     /* Button Styles */
@@ -517,41 +519,64 @@
     };
 
 
-    function loadSessionData() {
-      fetch('static/session.json')
-    .then(response => response.json())
-    .then(data => {
-      const sessionsData = data;
-      console.log(data);
-      const sessionsContainer = document.getElementById('sessionsContainer');
+    function submitSessionForm(sessionIndex) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/visualize';
 
-      // Loop over each session and create the session boxes
-      sessionsData.forEach((session, index) => {
-        const sessionBox = document.createElement('div');
-        sessionBox.className = 'session-box';
+      const sessionField = document.createElement('input');
+      sessionField.type = 'hidden';
+      sessionField.name = 'session_index';
+      sessionField.value = sessionIndex; // Index of the session
 
-        sessionBox.innerHTML = `
-          <div class="session-title">${session?.session} - ${session.date}</div>
+      const locationField = document.createElement('input');
+      locationField.type = 'hidden';
+      locationField.name = 'location_choice';
+      locationField.value = selectedLocation || '1'; // Use selected or default to '1'
 
-          <div class="session-stat">FG %: ${session.fg_percentage + '%'} - ${session.fg_makes}/${session.fg_attempts}</div>
-          <div class="session-stat">Avg Precision: ${session.avg_precision.toFixed(2)}</div>
-          <div class="session-stat">Avg Height: ${session.avg_height.toFixed(2)}</div>
-          
-        `;
-          
+      const distanceField = document.createElement('input');
+      distanceField.type = 'hidden';
+      distanceField.name = 'distance_choice';
+      distanceField.value = selectedDistance || '1'; // Use selected or default to '1'
+
+      form.appendChild(sessionField);
+      form.appendChild(locationField);
+      form.appendChild(distanceField);
+
+      document.body.appendChild(form);
+      form.submit();
+  }
+
+  // Update your event listener to call submitSessionForm
+  function loadSessionData() {
+    fetch('static/session.json')
+      .then(response => response.json())
+      .then(data => {
+        const sessionsData = data;
+        const sessionsContainer = document.getElementById('sessionsContainer');
+
+        // Loop over each session and create the session boxes
+        sessionsData.forEach((session, index) => {
+          const sessionBox = document.createElement('div');
+          sessionBox.className = 'session-box';
+
+          sessionBox.innerHTML = `
+            <div class="session-title">${session?.session} - ${session.date}</div>
+            <div class="session-stat">FG: ${session.fg_percentage + '%'} - ${session.fg_makes}/${session.fg_attempts}</div>
+            <div class="session-stat">Avg Precision: ${session.avg_precision.toFixed(2)}</div>
+            <div class="session-stat">Avg Height: ${session.avg_height.toFixed(2)}</div>
+          `;
+
           sessionsContainer.appendChild(sessionBox);
-          sessionBox.addEventListener('click', showRightSidebar);
+          sessionBox.addEventListener('click', function() {
+            submitSessionForm(index); // Pass the session index
+          });
         });
       })
       .catch(error => {
         console.error('Error loading session data:', error);
       });
-}
-
-function showRightSidebar() {
-      const rightSidebar = document.getElementById('myRightSidebar');
-      rightSidebar.style.display = 'block';
-    }
+  }
 
 
 document.addEventListener('DOMContentLoaded', loadSessionData);
