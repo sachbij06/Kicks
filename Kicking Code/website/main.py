@@ -3,7 +3,7 @@ from session import session
 from _visualization import visualize
 from _stats import stats
 
-import webbrowser, math
+import webbrowser
 
 
 app = Flask(__name__)
