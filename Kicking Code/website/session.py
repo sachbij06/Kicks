@@ -9,15 +9,13 @@ session = Blueprint("session", __name__, static_folder="static", template_folder
 JSON_FILE_PATH = "kicking_data.json"
 
 
-
-
 def write_to_json(data, filepath):
     """Write data to a JSON file, either appending or creating a new file."""
     try:
         with open(filepath, 'r+') as file:
-            file_data = json.load(file)  # Load existing data
-            file_data.append(data)       # Append the new data
-            file.seek(0)                 # Move the file pointer to the beginning
+            file_data = json.load(file)   # Load existing session data
+            file_data.append(data)   # Append the new session data
+            file.seek(0)   # Move the file finder to the beginning of the file
             json.dump(file_data, file, indent=4)
 
     except FileNotFoundError:
@@ -25,9 +23,6 @@ def write_to_json(data, filepath):
 
         with open(filepath, 'w') as file:
             json.dump([data], file, indent=4)
-
-
-
 
 
 def calculate_session_stats(kicks_data):
@@ -55,22 +50,21 @@ def calculate_session_stats(kicks_data):
     return avg_precision, avg_height, fg_percentage, total_attempts, makes
 
 
-
-
 def write_session_summary(filepath):
-    """Reads kicking data and writes a summary of each session."""
+    # Reads kicking data and writes a summary
+
     try:
         with open(filepath, 'r') as file:
             kicks_data = json.load(file)
-
         all_session_results = []
 
-        # Iterate through each session
+        # Loop and iterate through each session
         for i, session in enumerate(kicks_data):
-            session_date = session[0][2]  # Assuming all kicks in a session share the same date
+
+            session_date = session[0][2]
             avg_precision, avg_height, fg_percentage, total_attempts, makes = calculate_session_stats(session)
 
-            # Create session summary with session number
+            # Create session summary with a number appended
             session_result = {
                 "session": f"Session {i + 1}",
                 "date": session_date,
@@ -91,7 +85,9 @@ def write_session_summary(filepath):
     except FileNotFoundError:
         print("JSON file not found.")
 
+
 @session.route('/submit-session', methods=['POST'])
+
 def submit_session():
     if request.method == 'POST':
         data = request.json
@@ -99,7 +95,7 @@ def submit_session():
         session_date = data['sessionDate']
 
         kicks_data = data['kicksData']
-        session_results = []  # To store the processed data for the session      
+        session_results = []     
 
         # Process each kick and prepare the result structure
         for kick in kicks_data:
@@ -115,13 +111,13 @@ def submit_session():
             # Determine "make" or "miss"
             make_or_miss = "make" if -8 < precision < 8 and height > 0 else "miss"
             
-            # Build the data structure for this kick
+            # Data structure for each kick
             kick_result = [
-                distance,               # Distance in yards
-                location,               # Location on the field
-                session_date,           # Date of the session
-                make_or_miss,           # "make" or "miss" based on conditions
-                [precision, height]     # Precision and height (distance score)
+                distance,   # Distance in yards
+                location,   # Location on the field
+                session_date,   # Date of the session
+                make_or_miss,   # "make" or "miss" conditional (could use boolean for future btw)
+                [precision, height]   # Precision and height (distance score)
             ]
 
             session_results.append(kick_result)

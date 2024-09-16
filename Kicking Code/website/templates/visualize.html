@@ -435,6 +435,10 @@
     let selectedLocation = null;
     let selectedDistance = null;
 
+    const img = document.getElementById("dynamicImage");
+    const defaultText = document.getElementById("defaultText");
+
+
     // Function to handle both location and distance selection
     function selectOption(button, type, value) {
       // Deselect previous button and highlight the new one
@@ -449,6 +453,7 @@
         selectedDistance = value;
       }
     }
+
 
     // Reset stats (basic stats)
     function resetStats() {
@@ -502,14 +507,13 @@
       form.submit();
     }
 
+
     // Toggle dropdowns
     function toggleDropdown(dropdownId) {
       const dropdown = document.getElementById(dropdownId);
       dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     }
 
-    const img = document.getElementById("dynamicImage");
-    const defaultText = document.getElementById("defaultText");
 
     // Check if the image source is valid
     img.onload = function() {
@@ -547,8 +551,9 @@
       form.submit();
   }
 
-  // Update your event listener to call submitSessionForm
-  function loadSessionData() {
+
+    // Update your event listener to call submitSessionForm
+    function loadSessionData() {
     fetch('static/session.json')
       .then(response => response.json())
       .then(data => {
@@ -579,7 +584,7 @@
   }
 
 
-document.addEventListener('DOMContentLoaded', loadSessionData);
+    document.addEventListener('DOMContentLoaded', loadSessionData);
 
   </script>
 </body>

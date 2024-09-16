@@ -119,9 +119,10 @@
         <a href="/comingsoon">Coming Soon</a>
       </nav>
 
+
     <!-- Main Content Container -->
     <div class="container">
-        <!-- Left section: Title and Text -->
+
         <div class="left-section">
             <h1>Precision, Performance, Insights.</h1>
             <p>
@@ -130,21 +131,21 @@
             </p>
         </div>
 
-        <!-- Right section: Field Goal Tracker -->
+        <!-- Field Goal Tracker -->
         <div class="right-section">
-            <!-- Dynamic Field Goal Tracker -->
             <canvas id="fieldGoalCanvas" width="400" height="400"></canvas>
         </div>
     </div>
 
-    <!-- Video Section -->
-    <div class="video-section">
-        <!-- Video Demo Section -->
-        <video autoplay muted loop controls>
-            <source src="static\demo.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+
+        <!-- Video Section -->
+        <div class="video-section">
+            <video autoplay muted loop controls>
+                <source src="static\demo.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
 
     <!-- Add your JavaScript for the field goal demo here -->
     <script>
@@ -157,7 +158,7 @@
 
             drawGoalPosts(ctx, canvas.width, canvas.height);
             drawFootball(ctx, footballX, footballY);
-            drawScores(ctx, footballX, footballY);  // Draw initial scores
+            drawScores(ctx, footballX, footballY);  // Initial scores
 
             canvas.addEventListener('click', function (event) {
                 const rect = canvas.getBoundingClientRect();
@@ -170,7 +171,7 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawGoalPosts(ctx, canvas.width, canvas.height);
                 drawFootball(ctx, footballX, footballY);
-                drawScores(ctx, footballX, footballY);  // Update the scores after the click
+                drawScores(ctx, footballX, footballY);  // Update the scores
             });
         });
 
@@ -253,6 +254,7 @@
             ctx.font = `${fontWeight} 16px Arial`;
             ctx.fillText(`${result}`, 345, 25);
         }
+
     </script>
 </body>
 </html>

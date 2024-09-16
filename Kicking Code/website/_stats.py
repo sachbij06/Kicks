@@ -13,6 +13,7 @@ def show_results():
 
   attempts = _data.get_all_data()
 
+
   left_hash_made = []
   left_middle_made = []
   right_hash_made = []
@@ -82,8 +83,6 @@ def show_results():
     elif fg[1] == 'Middle':
       middle_missed.append(fg)
       
-  
-
   for attempt in attempts:
     avg_abs_value += abs(attempt[4][0])
     aggregate_precision_scores += (attempt[4][0])
@@ -115,55 +114,28 @@ def show_results():
       total_makes += 1
 
 
-# -------------------------- Combined Stats Initialization --------------------------
-
-  combined_makes = 0
-  combined_attempts = 0
-
-  combined_college_left_hash_made = 0
-  combined_college_left_hash_attempted = 0
-
-  combined_middle_made = 0
-  combined_middle_attempted = 0
-
-  combined_college_right_hash_made = 0
-  combined_college_right_hash_attempted = 0
-
-  combined_fg_20_29_made_count = 0
-  combined_fg_20_29_attempted_count = 0
-  combined_fg_30_39_made_count = 0
-  combined_fg_30_39_attempted_count = 0
-  combined_fg_40_49_made_count = 0
-  combined_fg_40_49_attempted_count = 0
-  combined_fg_50_plus_made_count = 0
-  combined_fg_50_plus_attempted_count = 0
-
-
-  list_of_week_files = []
-
   fig, ax = plt.subplots(figsize=(12, 6))
     
   ax.set_xlim(0, 100)
   ax.set_ylim(10, 120)
   
-  #fill
   ax.fill_between([0, 120], 10, 120, color='green')
 
 
-  #interp is what gives the depth perception from the slanted lines
+  # interp is what gives the depth perception from the slanted lines
   ax.plot([np.interp(10, [10, 100], [5, 25]), np.interp(100, [10, 100], [5, 25])], [10, 100], color='white', lw=1.5)  # Left sideline
   ax.plot([np.interp(10, [10, 100], [95, 75]), np.interp(100, [10, 100], [95, 75])], [10, 100], color='white', lw=1.5)  # Right sideline
   
   
   for y in range(20, 110, 10):  # 10 yard lines
       
-      #initialization of start_x and end_x
+      # Initialization
       start_x = np.interp(y, [10, 100], [5, 25])
       end_x = np.interp(y, [10, 100], [95, 75])
       
-      ax.plot([start_x, end_x], [y, y], color='white', lw=1)  #10 Yard Lines
-      ax.plot([88.3, 11.7], [40, 40], color='white', lw=1.15)  #50 Yard Line
-      ax.plot([91.5, 8.5], [25, 25], color='black', lw=0.5)  #35 Yard Line
+      ax.plot([start_x, end_x], [y, y], color='white', lw=1)    # 10 Yard Lines
+      ax.plot([88.3, 11.7], [40, 40], color='white', lw=1.15)    # 50 Yard Line
+      ax.plot([91.5, 8.5], [25, 25], color='black', lw=0.5)    # 35 Yard Line
       
       
       number_size = np.interp(y, [10, 9], [21, 17])
@@ -187,25 +159,25 @@ def show_results():
           else:
               ax.text((start_x + 6), y, f'{90 - y}', color='white', fontsize=number_size, ha='left', va='center', rotation=-105)
               ax.text((end_x - 6), y, f'{90 - y}', color='white', fontsize=number_size, ha='right', va='center', rotation=105)
+      
       else:
           ax.text((start_x + 6), y, '40', color='white', fontsize=number_size, ha='left', va='center', rotation=-105)
-          ax.text((end_x - 6), y, '40', color='white', fontsize=number_size, ha='right', va='center', rotation=105)
-          
+          ax.text((end_x - 6), y, '40', color='white', fontsize=number_size, ha='right', va='center', rotation=105)       
       
-  for y in range(15, 95, 5):  #5 yard lines from 15 to 95
+  for y in range(15, 95, 5):  # 5 yard lines from 15 to 95
       if y % 10 != 0:
           if y != 25:
               start_x = np.interp(y, [10, 100], [5, 25])
               end_x = np.interp(y, [10, 100], [95, 75])
               ax.plot([start_x, end_x], [y, y], color='white', lw=0.5)         
           
-  for y in range(10, 90, 1): #Left Hash ticks
+  for y in range(10, 90, 1):   # Left Hash Marks
       if y % 1 != 1:
           start_x = np.interp(y, [10, 100], [27, 37])
           end_x = np.interp(y, [10, 100], [29, 39])
           ax.plot([start_x, end_x], [y, y], color='white', lw=0.2)
           
-  for y in range(10, 90, 1): #Right Hash ticks
+  for y in range(10, 90, 1):   # Right Hash Marks
       if y % 1 != 1:
           start_x = np.interp(y, [10, 100], [73, 63])
           end_x = np.interp(y, [10, 100], [71, 61])
@@ -216,8 +188,6 @@ def show_results():
       ax.text(center_x_40, y, 'X', color='white', fontsize=10, ha='center', va='center', fontweight='bold')
       
   
-
-  # Set aspect of the plot and remove axes for better visual appeal
   ax.set_aspect('auto')
   ax.axis('off')
 

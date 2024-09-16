@@ -256,6 +256,7 @@
 
 </head>
 <body>
+
   <nav>
     <a href="/home">Home</a>
     <a href="/session">Charting</a>
@@ -264,10 +265,11 @@
     <a href="/comingsoon">Coming Soon</a>
   </nav>
 
+
       <br><h1>Chart Your Session</h1></br>
     <div class="contentContainer">
-    <div id = "formDiv">
-    <form id="kickSessionForm">
+      <div id = "formDiv">
+      <form id="kickSessionForm">
 
 
         <label for="session_kicks">Enter the # of kicks from your session <i><b><br><span class= "suggestion-text">(we suggest having it on rolling film)</span></b></i></label>
@@ -284,7 +286,8 @@
 
 
         <button type="button" onclick="generateKickForms()">Chart Kicks</button>
-    </form>
+    
+      </form>
     </div>
 
     <div id="previewContainer"></div>
@@ -294,267 +297,274 @@
     <div id="kickDetailsForms" class="sidebar"></div>
 
     <script>
-    const previewContainer = document.getElementById('previewContainer');
-    previewContainer.innerHTML = '';
-    document.getElementById('previewContainer').style.width = 'fit-content';
-    document.getElementById('previewContainer').style.display = 'flex';
-
-    document.getElementById('session_video').addEventListener('change', function(event) {
+      const previewContainer = document.getElementById('previewContainer');
+      previewContainer.innerHTML = '';
       
-        const file = event.target.files[0];
-        if (!file) {
-            return;
-        }
+      document.getElementById('previewContainer').style.width = 'fit-content';
+      document.getElementById('previewContainer').style.display = 'flex';
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const previewContainer = document.getElementById('previewContainer');
-            previewContainer.innerHTML = '';
-
-            if (file.type.startsWith('video/')) {
-                const video = document.createElement('video');
-                video.src = e.target.result;
-                video.controls = true;
-                video.style.maxWidth = '100%';
-                video.style.maxHeight = '100%';
-                previewContainer.appendChild(video);
-            } else {
-                const textDiv = document.createElement('div');
-                textDiv.textContent = "File uploaded. Preview not available for this type.";
-                previewContainer.appendChild(textDiv);
-            }
-        };
-        reader.readAsDataURL(file);
-    });
-    
+      document.getElementById('session_video').addEventListener('change', function(event) {
         
-    function generateKickForms() {
-        const previewContainer = document.getElementById('previewContainer');
-        previewContainer.style.position = 'fixed';
-        previewContainer.style.width = '65vw';
-        previewContainer.style.height = '100vh';
-        previewContainer.style.top = '0';
-        previewContainer.style.left = '0';
-        const div = document.getElementById('formDiv');
-        div.style.display = 'none';
+          const file = event.target.files[0];
+          if (!file) {
+              return;
+          }
 
-        const session_kicks = parseInt(document.getElementById("session_kicks").value, 10);
-        const kickDetailsFormsContainer = document.getElementById("kickDetailsForms");
-        document.querySelector('.sidebar').style.display = 'block';
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              const previewContainer = document.getElementById('previewContainer');
+              previewContainer.innerHTML = '';
 
-        
+              if (file.type.startsWith('video/')) {
+                  const video = document.createElement('video');
+                  video.src = e.target.result;
+                  video.controls = true;
+                  video.style.maxWidth = '100%';
+                  video.style.maxHeight = '100%';
+                  previewContainer.appendChild(video);
+              } else {
+                  const textDiv = document.createElement('div');
+                  textDiv.textContent = "File uploaded. Preview not available for this type.";
+                  previewContainer.appendChild(textDiv);
+              }
+          };
+          reader.readAsDataURL(file);
+      });
+       
+      
+      function generateKickForms() {
+          const previewContainer = document.getElementById('previewContainer');
+          previewContainer.style.position = 'fixed';
+          previewContainer.style.width = '65vw';
+          previewContainer.style.height = '100vh';
+          previewContainer.style.top = '0';
+          previewContainer.style.left = '0';
+          const div = document.getElementById('formDiv');
+          div.style.display = 'none';
 
-        for (let i = 1; i <= session_kicks; i++) {
-            
-            const form = document.createElement("form");
-            form.id = `kickForm${i}`;
+          const session_kicks = parseInt(document.getElementById("session_kicks").value, 10);
+          const kickDetailsFormsContainer = document.getElementById("kickDetailsForms");
+          document.querySelector('.sidebar').style.display = 'block';
 
-            const heading = document.createElement("h3");
-            heading.textContent = `Kick ${i} of ${session_kicks}`;
-            form.appendChild(heading);
+          
 
-            form.appendChild(document.createElement('br')); //BREAK LINE
-            form.appendChild(document.createElement('br')); //BREAK LINE
-            form.appendChild(document.createElement('br')); //BREAK LINE
+          for (let i = 1; i <= session_kicks; i++) {
+              
+              const form = document.createElement("form");
+              form.id = `kickForm${i}`;
 
-            // Distance input
-            const labelDistance = document.createElement("label");
-            labelDistance.setAttribute("for", `distance${i}`);
-            labelDistance.textContent = "Distance:";
+              const heading = document.createElement("h3");
+              heading.textContent = `Kick ${i} of ${session_kicks}`;
+              form.appendChild(heading);
 
-            const inputDistance = document.createElement("input");
-            inputDistance.setAttribute("type", "number");
-            inputDistance.setAttribute("id", `distance${i}`);
-            inputDistance.setAttribute("name", `distance${i}`);
-            inputDistance.setAttribute("min", "17");
-            inputDistance.setAttribute("max", "70");
-            inputDistance.setAttribute("placeholder", "Enter your distance in yards.");
+              form.appendChild(document.createElement('br')); //BREAK LINE
+              form.appendChild(document.createElement('br')); //BREAK LINE
+              form.appendChild(document.createElement('br')); //BREAK LINE
 
+              // Distance input
+              const labelDistance = document.createElement("label");
+              labelDistance.setAttribute("for", `distance${i}`);
+              labelDistance.textContent = "Distance:";
 
-            form.appendChild(labelDistance);
-            form.appendChild(inputDistance);
-
-
-            form.appendChild(document.createElement('br')); //BREAK LINE
-            form.appendChild(document.createElement('br')); //BREAK LINE
-
-
-            // Location select dropdown
-            const labelLocation = document.createElement("label");
-            labelLocation.setAttribute("for", `location${i}`);
-            labelLocation.textContent = "Location:";
-
-            const selectLocation = document.createElement("select");
-            selectLocation.setAttribute("id", `location${i}`);
-            selectLocation.setAttribute("name", `location${i}`);
-
-            const locations = ["","Left Hash", "Left Middle", "Middle", "Right Middle", "Right Hash"];
-            locations.forEach(location => {
-                const option = document.createElement("option");
-                option.value = location;
-                option.textContent = location;
-                selectLocation.appendChild(option);
-            });
-
-            form.appendChild(labelLocation);
-            form.appendChild(selectLocation);
+              const inputDistance = document.createElement("input");
+              inputDistance.setAttribute("type", "number");
+              inputDistance.setAttribute("id", `distance${i}`);
+              inputDistance.setAttribute("name", `distance${i}`);
+              inputDistance.setAttribute("min", "17");
+              inputDistance.setAttribute("max", "70");
+              inputDistance.setAttribute("placeholder", "Enter your distance in yards.");
 
 
-            const canvas = document.createElement("canvas");
-            canvas.id = `fieldGoalCanvas${i}`;
-            canvas.width = 427.5;
-            canvas.height = 427.5;
-            form.appendChild(canvas);
+              form.appendChild(labelDistance);
+              form.appendChild(inputDistance);
 
-            const inputX = document.createElement("input");
-            inputX.setAttribute("type", "hidden");
-            inputX.setAttribute("id", `kickX${i}`);
-            form.appendChild(inputX);
 
-            const inputY = document.createElement("input");
-            inputY.setAttribute("type", "hidden");
-            inputY.setAttribute("id", `kickY${i}`);
-            form.appendChild(inputY);
+              form.appendChild(document.createElement('br')); //BREAK LINE
+              form.appendChild(document.createElement('br')); //BREAK LINE
 
-            
 
-            kickDetailsFormsContainer.appendChild(form);
-            initCanvas(`fieldGoalCanvas${i}`, inputX, inputY);
-            
-            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
-            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
-            kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
-        }
+              // Location select dropdown
+              const labelLocation = document.createElement("label");
+              labelLocation.setAttribute("for", `location${i}`);
+              labelLocation.textContent = "Location:";
 
-        // Add submit button after generating all forms
-        
-        const submitBtn = document.createElement("button");
-        submitBtn.textContent = "Submit Session";
-        submitBtn.type = "button";
-        submitBtn.onclick = submitSessionData;
-        
-        kickDetailsFormsContainer.appendChild(submitBtn);
-        kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
-        kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
-        kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
-        
-    }
+              const selectLocation = document.createElement("select");
+              selectLocation.setAttribute("id", `location${i}`);
+              selectLocation.setAttribute("name", `location${i}`);
 
-    function initCanvas(canvasId, inputX, inputY) {
-    const canvas = document.getElementById(canvasId);
-    const ctx = canvas.getContext('2d');
+              const locations = ["","Left Hash", "Left Middle", "Middle", "Right Middle", "Right Hash"];
+              locations.forEach(location => {
+                  const option = document.createElement("option");
+                  option.value = location;
+                  option.textContent = location;
+                  selectLocation.appendChild(option);
+              });
 
-    let footballX = canvas.width / 2;
-    let footballY = canvas.height / 2;
+              form.appendChild(labelLocation);
+              form.appendChild(selectLocation);
 
-    drawGoalPosts(ctx, canvas.width, canvas.height);
-    drawFootball(ctx, footballX, footballY);
 
-    canvas.addEventListener('click', function (event) {
-        const rect = canvas.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const clickY = event.clientY - rect.top;
+              const canvas = document.createElement("canvas");
+              canvas.id = `fieldGoalCanvas${i}`;
+              canvas.width = 427.5;
+              canvas.height = 427.5;
+              form.appendChild(canvas);
 
-        footballX = clickX;
-        footballY = clickY;
+              const inputX = document.createElement("input");
+              inputX.setAttribute("type", "hidden");
+              inputX.setAttribute("id", `kickX${i}`);
+              form.appendChild(inputX);
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawGoalPosts(ctx, canvas.width, canvas.height);
-        drawFootball(ctx, footballX, footballY);
+              const inputY = document.createElement("input");
+              inputY.setAttribute("type", "hidden");
+              inputY.setAttribute("id", `kickY${i}`);
+              form.appendChild(inputY);
 
-        inputX.value = footballX;
-        inputY.value = footballY;
-    });
-}
-    function drawFootball(ctx, x, y) {
+              
 
-        ctx.beginPath();
-        ctx.fillStyle = 'brown';
+              kickDetailsFormsContainer.appendChild(form);
+              initCanvas(`fieldGoalCanvas${i}`, inputX, inputY);
+              
+              kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+              kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+              kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+          }
 
-        // Draw elliptical shape
-        ctx.ellipse(x, y, 3.5625, 7.125, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.closePath();
-
-        // Add white laces
-        ctx.beginPath();
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 1;
-
-        // Draw horizontal laces
-        ctx.moveTo(x - 2.1375, y);
-        ctx.lineTo(x + 2.1375, y);
-        ctx.moveTo(x - 2.1375, y + 3);
-        ctx.lineTo(x + 2.1375, y + 3);
-        ctx.moveTo(x - 2.1375, y - 3);
-        ctx.lineTo(x + 2.1375, y - 3);
-        
-
-        // Draw vertical laces
-        ctx.moveTo(x, y - 4.9875);
-        ctx.lineTo(x, y + 4.9875);
-        ctx.stroke();
-        ctx.closePath();
-
+          // Add submit button after generating all forms
+          
+          const submitBtn = document.createElement("button");
+          submitBtn.textContent = "Submit Session";
+          submitBtn.type = "button";
+          submitBtn.onclick = submitSessionData;
+          
+          kickDetailsFormsContainer.appendChild(submitBtn);
+          kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+          kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+          kickDetailsFormsContainer.appendChild(document.createElement('br')); //BREAK LINE
+          
       }
 
-    function drawGoalPosts(ctx, canvasWidth, canvasHeight) {
 
-        // vertical and horizontal goal posts
-        ctx.fillStyle = 'yellow';
-        ctx.fillRect(213.75, 320.625, 6, 267.1875); //vertical
-        ctx.fillRect(46.075, 320.625, 335.825, 4); //horizontal
+      function initCanvas(canvasId, inputX, inputY) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
 
-        // HS goal posts
-        ctx.fillRect(49.875, 106.875, -4, 213.75);
-        ctx.fillRect(377.625, 106.875, 4, 213.75);
+      let footballX = canvas.width / 2;
+      let footballY = canvas.height / 2;
 
-        // College goal posts
-        ctx.fillStyle = 'orange';
-        ctx.fillRect(81.9375, 106.875, -4, 213.75);
-        ctx.fillRect(344.85, 106.875, 4, 213.75);
+      drawGoalPosts(ctx, canvas.width, canvas.height);
+      drawFootball(ctx, footballX, footballY);
 
-        };
+      canvas.addEventListener('click', function (event) {
+          const rect = canvas.getBoundingClientRect();
+          const clickX = event.clientX - rect.left;
+          const clickY = event.clientY - rect.top;
 
-    function gatherFormData() {
-        const sessionDate = document.getElementById("sessionDate").value;
-        const session_kicks = parseInt(document.getElementById("session_kicks").value, 10);
+          footballX = clickX;
+          footballY = clickY;
 
-        let kicksData = [];
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawGoalPosts(ctx, canvas.width, canvas.height);
+          drawFootball(ctx, footballX, footballY);
 
-        for (let i = 1; i <= session_kicks; i++) {
-            var distance = document.getElementById(`distance${i}`).value;
-            const location = document.getElementById(`location${i}`).value;
+          inputX.value = footballX;
+          inputY.value = footballY;
+      });
+  }
+      
 
-            var inputX = document.getElementById(`kickX${i}`).value;
-            var inputY = document.getElementById(`kickY${i}`).value;
+      function drawFootball(ctx, x, y) {
 
-        
+          ctx.beginPath();
+          ctx.fillStyle = 'brown';
 
-        kicksData.push({distance, location, inputX, inputY});
+          // Draw elliptical shape
+          ctx.ellipse(x, y, 3.5625, 7.125, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.closePath();
+
+          // Add white laces
+          ctx.beginPath();
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = 1;
+
+          // Draw horizontal laces
+          ctx.moveTo(x - 2.1375, y);
+          ctx.lineTo(x + 2.1375, y);
+          ctx.moveTo(x - 2.1375, y + 3);
+          ctx.lineTo(x + 2.1375, y + 3);
+          ctx.moveTo(x - 2.1375, y - 3);
+          ctx.lineTo(x + 2.1375, y - 3);
+          
+
+          // Draw vertical laces
+          ctx.moveTo(x, y - 4.9875);
+          ctx.lineTo(x, y + 4.9875);
+          ctx.stroke();
+          ctx.closePath();
+
         }
 
-        return {sessionDate, session_kicks, kicksData};
-    }
 
-    function submitSessionData() {
-        const sessionData = gatherFormData();
+      function drawGoalPosts(ctx, canvasWidth, canvasHeight) {
 
-        fetch('/submit-session', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json',},
-            body: JSON.stringify(sessionData)
-            
-        }).then(response => response.json())
+          // vertical and horizontal goal posts
+          ctx.fillStyle = 'yellow';
+          ctx.fillRect(213.75, 320.625, 6, 267.1875); //vertical
+          ctx.fillRect(46.075, 320.625, 335.825, 4); //horizontal
 
-        .then(data => {
-            console.log('Success:', data);
-            location.reload()
-            })
-            
+          // HS goal posts
+          ctx.fillRect(49.875, 106.875, -4, 213.75);
+          ctx.fillRect(377.625, 106.875, 4, 213.75);
 
-        .catch((error) => console.error('Error:', error));
-    }
+          // College goal posts
+          ctx.fillStyle = 'orange';
+          ctx.fillRect(81.9375, 106.875, -4, 213.75);
+          ctx.fillRect(344.85, 106.875, 4, 213.75);
+
+          };
+
+
+      function gatherFormData() {
+          const sessionDate = document.getElementById("sessionDate").value;
+          const session_kicks = parseInt(document.getElementById("session_kicks").value, 10);
+
+          let kicksData = [];
+
+          for (let i = 1; i <= session_kicks; i++) {
+              var distance = document.getElementById(`distance${i}`).value;
+              const location = document.getElementById(`location${i}`).value;
+
+              var inputX = document.getElementById(`kickX${i}`).value;
+              var inputY = document.getElementById(`kickY${i}`).value;
+
+          
+
+          kicksData.push({distance, location, inputX, inputY});
+          }
+
+          return {sessionDate, session_kicks, kicksData};
+      }
+
+
+      function submitSessionData() {
+          const sessionData = gatherFormData();
+
+          fetch('/submit-session', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json',},
+              body: JSON.stringify(sessionData)
+              
+          }).then(response => response.json())
+
+          .then(data => {
+              console.log('Success:', data);
+              location.reload()
+              })
+              
+
+          .catch((error) => console.error('Error:', error));
+      }
 
 
     </script>

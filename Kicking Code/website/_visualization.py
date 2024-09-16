@@ -11,37 +11,39 @@ visualize = Blueprint("visualize", __name__, static_folder="static", template_fo
 @visualize.route('/visualize', methods=['GET', 'POST'])
 def submit_form():
   if request.method == 'POST':
-    # Check if 'session_index' is in the form data
+
     session_index = request.form.get('session_index', None)
     location_choice = request.form.get('location_choice', "1")
     distance_choice = request.form.get('distance_choice', "1")
 
+
+    # Handles visualization for the specific session
     if session_index is not None:
-        # Handle visualization for the specific session
         session_index = int(session_index)
-        # Load the sessions data
+
         with open('Kicking Code/website/static/session.json', 'r') as f:
             sessions_data = json.load(f)
-        # Get the specific session's kicks
+      
         session = sessions_data[session_index]
         attempts = session['kicks']
+
     else:
-        # Fetch all the attempts data
         attempts = _data.get_all_data()
+
 
     # Now, regardless of whether attempts are from a session or all data, we can proceed to apply filters
 
     # Initialize metrics
     sum_of_precision_scores = 0
-    visualized_total_attempts = 0
-    visualized_total_makes = 0
+    total_attempts = 0
+    total_makes = 0
     sum_of_abs_value = 0
     sum_of_euclidean_distances = 0
     sum_of_heights = 0
 
-    # Function to filter attempts based on the selected distance range
+      # Function to filter attempts based on the selected distance range
     def is_within_distance(attempt, distance_choice):
-        distance = attempt[0]  # Assuming attempt[0] is the distance
+        distance = attempt[0]
         if distance_choice == "1":  # All Distances
             return True
         elif distance_choice == "2" and 20 <= distance <= 29:
@@ -54,11 +56,11 @@ def submit_form():
             return True
         return False
 
-    # Filter attempts by both location and distance
+      # Filter attempts by both location and distance
     filtered_attempts = []
     for attempt in attempts:
         if is_within_distance(attempt, distance_choice):
-            if location_choice == "1":  # All locations
+            if location_choice == "1":
                 filtered_attempts.append(attempt)
             elif location_choice == "2" and attempt[1] in ["Left Hash", "Left Middle"]:
                 filtered_attempts.append(attempt)
@@ -67,65 +69,69 @@ def submit_form():
             elif location_choice == "4" and attempt[1] in ["Right Hash", "Right Middle"]:
                 filtered_attempts.append(attempt)
 
-    # Now process the filtered_attempts
 
-    # Check if there are any filtered attempts
-    visualized_total_attempts = len(filtered_attempts)
+    # Processing of filtered attempts >
 
-    if visualized_total_attempts > 0:
-        # Process filtered attempts
+    # Check if there are any filtered attempts 
+    total_attempts = len(filtered_attempts)
+    if total_attempts > 0: 
+        
         for attempt in filtered_attempts:
-            sum_of_precision_scores += attempt[4][0]
-            sum_of_abs_value += abs(attempt[4][0])
-            sum_of_heights += attempt[4][1]
-            if attempt[3] == 'make':
-                visualized_total_makes += 1
+            # Math for averages
+            sum_of_precision_scores += attempt[4][0]   # Gets a total precision score (Directional) that you need to divide by total attempts
+            sum_of_abs_value += abs(attempt[4][0])   # Gets a total precision score (Non-Directional) that you need to divide by total attempts
+            sum_of_heights += attempt[4][1]   # Gets a total heigh score that you need to divide by total attempts
 
-            # Calculate Euclidean distance for each attempt
-            precision_score = attempt[4][0]  # x-coordinate
-            distance_height_score = attempt[4][1]  # y-coordinate
-            euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)
-            sum_of_euclidean_distances += euclidean_distance
-        avg_height = sum_of_heights / visualized_total_attempts
+            if attempt[3] == 'make':
+                total_makes += 1
+
+              # Math for Euclidean distance
+            precision_score = attempt[4][0]
+            distance_height_score = attempt[4][1]
+            euclidean_distance = math.sqrt((precision_score - 0) ** 2 + (distance_height_score - 10) ** 2)   # Gets attempt-by-attempt euclidean distance
+            sum_of_euclidean_distances += euclidean_distance   # Gets a total euclidean distance that you need to divide by total attempts
+
         # Calculate averages
-        visualized_pct_made = visualized_total_makes / visualized_total_attempts * 100
-        visualized_directional = sum_of_precision_scores / visualized_total_attempts
-        visualized_deviation_from_middle = sum_of_abs_value / visualized_total_attempts
-        avg_euclidean_distance = sum_of_euclidean_distances / visualized_total_attempts
+        pct_made = total_makes / total_attempts * 100
+        directional_bias = sum_of_precision_scores / total_attempts
+        precision_deviation = sum_of_abs_value / total_attempts
+        avg_height = sum_of_heights / total_attempts
+        avg_euclidean_distance = sum_of_euclidean_distances / total_attempts
+
     else:
-        # No attempts found for the given filter; set default values
-        visualized_pct_made = 0
-        visualized_directional = 0
-        visualized_deviation_from_middle = 0
+        # No attempts for selected filter; set 0's for values
+        pct_made = 0
+        directional_bias = 0
+        precision_deviation = 0
         avg_euclidean_distance = None
         avg_height = 0
 
-    # Proceed to generate the plot as before, using filtered_attempts
 
-    # Plotting the stats only if there are filtered attempts
+
+    # Plot Generation
+
     fig, ax = plt.subplots(figsize=(15, 10))
-    plt.axis('off')  # Turns off the x and y axes
+    plt.axis('off')
 
-    if visualized_total_attempts > 0:
-        # Display basic stats with Euclidean distance
-        ax.text(3, 70, f"FG: {visualized_pct_made:.2f}%  -  {visualized_total_makes}/{visualized_total_attempts}\n"
-                        f"Precision: ±{visualized_deviation_from_middle:.2f}\n"
-                        f"Average Height: {avg_height:.2f}\n"
-                        f"Directional Bias: {visualized_directional:.2f}\n"
-                        f"Average Euclidean Distance: {avg_euclidean_distance:.2f}\n",
-                fontsize=12, color='white')
+    if total_attempts > 0:
+      ax.text(3, 70, f"FG: {pct_made:.2f}%  -  {total_makes}/{total_attempts}\n"
+                     f"Precision: ±{precision_deviation:.2f}\n"
+                     f"Average Height: {avg_height:.2f}\n"
+                     f"Directional Bias: {directional_bias:.2f}\n"
+                     f"Average Euclidean Distance: {avg_euclidean_distance:.2f}\n",
+      fontsize=12, color='white')
+
     else:
-        # Display no data message
-        ax.text(3, 115, "No field goal attempts found for the selected filters.", fontsize=16, color='white')
+      ax.text(3, 115, "No field goal attempts found for the selected filters.", fontsize=16, color='white')   # No attempts for selected filter
 
-    # Plot the field
-    ax.add_patch(patches.Rectangle((0, 0), 53.3, 60, facecolor='mediumseagreen')) # Adds a green rectangle for the field
+    # Field plot
+    ax.add_patch(patches.Rectangle((0, 0), 53.3, 60, facecolor='mediumseagreen'))
    
-    # Plot the end zone 
-    ax.add_patch(patches.Rectangle((0, 50), 53.3, 10, facecolor='seagreen')) # Adds a green rectangle for the end zone
-    ax.add_patch(patches.Rectangle((0, 60), 53.3, 70, facecolor='black')) # Adds a black rectangle as background
+    # Endzone plot
+    ax.add_patch(patches.Rectangle((0, 50), 53.3, 10, facecolor='seagreen'))
+    ax.add_patch(patches.Rectangle((0, 60), 53.3, 70, facecolor='black'))
     
-    # Plot the goal posts
+    # Goal Post Plot
     ax.plot([26.65, 26.65], [71, 60], color='yellow', linewidth=3)  # Base goalpost
     ax.plot([20, 20], [101, 71], color='yellow', linewidth=3)  # Left upright
     ax.plot([33.3, 33.3], [101, 71], color='yellow', linewidth=3)  # Right upright
@@ -149,33 +155,34 @@ def submit_form():
     for yard_line in range(50, 0, -5):
       ax.plot([0, 53.3], [yard_line, yard_line], color='white', linewidth=0.5)
 
-    
       # Left Hash Mark
-    ax.plot([13.325, 13.325], [0, 50], color='white', linewidth=1) # HS Left Hash
-    ax.plot([17.75, 17.75], [0, 50], color='orange', linewidth=1, alpha = 0.75) # Left Hash
+    ax.plot([17.75, 17.75], [0, 50], color='white', linewidth=1, alpha = 0.75) # Left Hash
     
-      # Left hash marks
+      # Left Hash Marks
     for yard_line in range(50, 0, -1):
-      ax.plot([12, 14.65], [yard_line, yard_line], color='white', linewidth=0.25)
+      ax.plot([16.425, 19.075], [yard_line, yard_line], color='white', linewidth=0.25)
     
-      # Right Hash Mark
-    ax.plot([39.975, 39.975], [0, 50], color='white', linewidth=1) # HS Right Hash
-    ax.plot([35.55, 35.55], [0, 50], color='orange', linewidth=1, alpha = 0.75) # Right Hash
+      # Right Hash Line
+    ax.plot([35.55, 35.55], [0, 50], color='white', linewidth=1, alpha = 0.75) # Right Hash
     
-      # Right hash marks
+      # Right Hash Marks
     for yard_line in range(50, 0, -1):
-      ax.plot([38.65, 41.3], [yard_line, yard_line], color='white', linewidth=0.25)
+      ax.plot([34.225, 36.875], [yard_line, yard_line], color='white', linewidth=0.25)
 
     
     for attempt in filtered_attempts:
+
       if not is_within_distance(attempt, distance_choice):
         continue  # Skip if the attempt is not within the selected distance
-      xLocationOnField = 0 #xLocationOnField initialization
-      xForFieldGoal = 0 #xForFieldGoal initialization
-      
+
+
+        # Plot Variable initializations
+      xLocationOnField = 0
+      xForFieldGoal = 0
       yForFieldGoal = 71 + (attempt[4][1] * 3)
+
       distance = attempt[0]
-      yPositionOnField = 60 - distance #convert distance to y-axis position
+      yPositionOnField = 60 - distance   # converts distance to y-axis position
 
       plotcolor = "white"
       linestyle = ''
@@ -356,14 +363,15 @@ def submit_form():
         linewidth = 0.75
     
 
-      # circle on field
+      # Attempt circle on field
       ax.scatter(xLocationOnField, yPositionOnField, s = 50, color = plotcolor)
       
-      # circle on field goal
+      # Attempt circle on field goal
       ax.scatter(xForFieldGoal, yForFieldGoal, s = 50, color = plotcolor)
     
-      # line between field and field goal
+      # Attempt line between field and field goal
       ax.plot([xLocationOnField, xForFieldGoal], [yPositionOnField, yForFieldGoal], color = plotcolor , linewidth = linewidth, linestyle = linestyle)
+      
     plt.plot()
     plt.savefig('Kicking Code/website/static/chart.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
     
