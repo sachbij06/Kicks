@@ -110,9 +110,9 @@ def submit_form():
 
     # Plot Generation
 
-    fig, ax = plt.subplots(figsize=(15, 10))
+    fig, ax = plt.subplots(figsize=(13, 10))
     plt.axis('off')
-
+    
     if total_attempts > 0:
       ax.text(3, 70, f"FG: {pct_made:.2f}%  -  {total_makes}/{total_attempts}\n"
                      f"Precision: ±{precision_deviation:.2f}\n"
@@ -125,7 +125,7 @@ def submit_form():
       ax.text(3, 115, "No field goal attempts found for the selected filters.", fontsize=16, color='white')   # No attempts for selected filter
 
     # Field plot
-    ax.add_patch(patches.Rectangle((0, 0), 53.3, 60, facecolor='mediumseagreen'))
+    ax.add_patch(patches.Rectangle((0, -20), 53.3, 80, facecolor='mediumseagreen'))
    
     # Endzone plot
     ax.add_patch(patches.Rectangle((0, 50), 53.3, 10, facecolor='seagreen'))
@@ -143,32 +143,34 @@ def submit_form():
     # Plot the yard lines and hash marks
     
       # 10 Yard lines
-    for yard_line in range(60, 0, -10):
+    for yard_line in range(60, -20, -10):
       ax.plot([0, 53.3], [yard_line, yard_line], color='white', linewidth=1)
     
       # Yard numbers
-    for yard_line in range(0, 55, 10):
-      ax.text(5, yard_line - 3, str(50 - yard_line), ha = 'center', va = 'bottom', color = 'white') # Left
-      ax.text(48.3, yard_line - 3, str(50 - yard_line), ha = 'center', va = 'bottom', color = 'white') # Right
+    for yard_line in range(0, 45, 10):
+      ax.text(5, yard_line - 3.5, str(50 - yard_line), ha = 'center', va = 'bottom', color = 'white') # Left
+      ax.text(48.3, yard_line - 3.5, str(50 - yard_line), ha = 'center', va = 'bottom', color = 'white') # Right
     
       # 5 Yard lines  
-    for yard_line in range(50, 0, -5):
+    for yard_line in range(45, -25, -5):
       ax.plot([0, 53.3], [yard_line, yard_line], color='white', linewidth=0.5)
 
       # Left Hash Mark
-    ax.plot([17.75, 17.75], [0, 50], color='white', linewidth=1, alpha = 0.75) # Left Hash
+    ax.plot([17.75, 17.75], [-30, 50], color='white', linewidth=1, alpha = 0.75) # Left Hash
     
       # Left Hash Marks
-    for yard_line in range(50, 0, -1):
+    for yard_line in range(50, -30, -1):
       ax.plot([16.425, 19.075], [yard_line, yard_line], color='white', linewidth=0.25)
     
       # Right Hash Line
-    ax.plot([35.55, 35.55], [0, 50], color='white', linewidth=1, alpha = 0.75) # Right Hash
+    ax.plot([35.55, 35.55], [-30, 50], color='white', linewidth=1, alpha = 0.75) # Right Hash
     
       # Right Hash Marks
-    for yard_line in range(50, 0, -1):
+    for yard_line in range(50, -30, -1):
       ax.plot([34.225, 36.875], [yard_line, yard_line], color='white', linewidth=0.25)
 
+    ax.text(5, -13.5, "40", ha = 'center', va = 'bottom', color = 'white') # Left
+    ax.text(48.3, -13.5, "40", ha = 'center', va = 'bottom', color = 'white') # Right
     
     for attempt in filtered_attempts:
 
@@ -371,6 +373,10 @@ def submit_form():
     
       # Attempt line between field and field goal
       ax.plot([xLocationOnField, xForFieldGoal], [yPositionOnField, yForFieldGoal], color = plotcolor , linewidth = linewidth, linestyle = linestyle)
+
+
+    ax.set_ylim(-30, 130)  # Adjust the lower limit as needed
+
       
     plt.plot()
     plt.savefig('Kicking Code/website/static/chart.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
