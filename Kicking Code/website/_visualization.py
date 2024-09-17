@@ -144,7 +144,7 @@ def submit_form():
     
       # 10 Yard lines
     for yard_line in range(60, -20, -10):
-      ax.plot([0, 53.3], [yard_line, yard_line], color='white', linewidth=1)
+      ax.plot([0, 53.3], [yard_line, yard_line], color='white', linewidth=0.4)
     
       # Yard numbers
     for yard_line in range(0, 45, 10):
@@ -153,21 +153,21 @@ def submit_form():
     
       # 5 Yard lines  
     for yard_line in range(45, -25, -5):
-      ax.plot([0, 53.3], [yard_line, yard_line], color='white', linewidth=0.5)
+      ax.plot([0, 53.3], [yard_line, yard_line], color='white', linewidth=0.25)
 
-      # Left Hash Mark
-    ax.plot([17.75, 17.75], [-30, 50], color='white', linewidth=1, alpha = 0.75) # Left Hash
+      # Left Hash Line
+    ax.plot([17.75, 17.75], [-30, 50], color='white', linewidth=0.6, alpha = 0.5) # Left Hash
     
       # Left Hash Marks
     for yard_line in range(50, -30, -1):
-      ax.plot([16.425, 19.075], [yard_line, yard_line], color='white', linewidth=0.25)
+      ax.plot([16.425, 19.075], [yard_line, yard_line], color='white', linewidth=0.15)
     
       # Right Hash Line
-    ax.plot([35.55, 35.55], [-30, 50], color='white', linewidth=1, alpha = 0.75) # Right Hash
+    ax.plot([35.55, 35.55], [-30, 50], color='white', linewidth=0.6, alpha = 0.75) # Right Hash
     
       # Right Hash Marks
     for yard_line in range(50, -30, -1):
-      ax.plot([34.225, 36.875], [yard_line, yard_line], color='white', linewidth=0.25)
+      ax.plot([34.225, 36.875], [yard_line, yard_line], color='white', linewidth=0.15)
 
     ax.text(5, -13.5, "40", ha = 'center', va = 'bottom', color = 'white') # Left
     ax.text(48.3, -13.5, "40", ha = 'center', va = 'bottom', color = 'white') # Right
