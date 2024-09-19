@@ -134,7 +134,6 @@ def submit_session():
         # Return a success message
         return jsonify({"status": "success", "message": "Data received and stored"}), 200
 
-
 def categorize_kicks_into_buckets(filepath):
     """Read the JSON file and categorize kicks into buckets based on distance and make/miss."""
     try:
