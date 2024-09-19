@@ -85,10 +85,28 @@
     button:not(:last-child) {
       margin-right: 40px;
     }
+
+        /* Back Button Styles */
+    .back-button {
+    background-color: #292929;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-right: 15px; /* Space between the button and the heading */
+    }
+
+.back-button:hover {
+  background-color: #575757;
+}
+
     
     /* Content Styles */
     .content {
-      padding: 20px;
+      padding: 10px;
       margin-left: 250px;
       align-items: center;
     }
@@ -392,16 +410,14 @@
       display: flex; /* Enables flexbox */
       justify-content: center; /* Centers the image horizontally */
       align-items: center; /* Centers the image vertically (if you want vertical centering as well) */
-      margin-top: 10px; /* Optional: Add some margin to space it from other elements */
     }
     .gray-box img {
       border: 0.1px solid #acacac;
       border-radius: 30px;
-      max-width: 50%;
+      width: 60%;
       height: auto;
       display: block;
       margin: 0 auto;
-      padding: px;
       display: inline-block;
     }
 
@@ -476,22 +492,14 @@
     <a href="/comingsoon">Coming Soon</a>
   </nav>
   
-  <!-- Left Sidebar -->
-  <div class="sidebar" id="mySidebar">
-    <button onclick="toggleDropdown('fieldGoalDropdown')">Field Goal     ▼</button>
-    <div id="fieldGoalDropdown" class="dropdown-content" style="display: block;">
-      <button onclick="resetStats()">All Sessions</button> <!-- Resets to the overall stats -->
-      <button>AI Insights</button>
-    </div>
-    <button onclick="toggleDropdown('kickoffDropdown')">Kickoff - Coming Soon</button>
-    <div id="kickoffDropdown" class="dropdown-content">
-      <button>Basic Stats</button>
-      <button>AI Insights</button>
-    </div>
+  <div class = "content">
+    <div class="header-container">
+        <button class="back-button" onclick="goBack()">Back</button>
+        <h1>Field Goal Visualization</h1>
   </div>
-  
-  <!-- Right Sidebar -->
-  <div class="right-sidebar" id="myRightSidebar">
+  </div>
+  <!-- Left Sidebar -->
+  <div class="sidebar" id="myRightSidebar">
     <h2>Sort</h2>
 
     <!-- Distance Dropdown -->
@@ -537,20 +545,7 @@
 
 
   <div class="content">
-    <div class="header-container">
-      <h1>Field Goal Sessions</h1>
-      <div class="sort-dropdown">
-        <label for="sortOptions">Sort By:</label>
-        <select id="sortOptions">
-          <option value="date">Date</option>
-          <option value="precision">Precision</option>
-          <option value="height">Height</option>
-          <option value="fg_percentage">FG%</option>
-        </select>
-      </div>  
     
-    <div class="sessions-container" id="sessionsContainer"></div>
-  </div>
 
   <div class="gray-box">
     <img id="dynamicImage" src="{{ plot_url }}" alt="Image not available" style="display: none;">
@@ -649,143 +644,11 @@
         defaultText.style.display = "none";
     };
 
-
-    function submitSessionForm(sessionName) {
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = '/visualize';
-
-      const sessionField = document.createElement('input');
-      sessionField.type = 'hidden';
-      sessionField.name = 'session_name';
-      sessionField.value = sessionName; // Index of the session
-
-      const locationField = document.createElement('input');
-      locationField.type = 'hidden';
-      locationField.name = 'location_choice';
-      locationField.value = selectedLocation || '1'; // Use selected or default to '1'
-
-      const distanceField = document.createElement('input');
-      distanceField.type = 'hidden';
-      distanceField.name = 'distance_choice';
-      distanceField.value = selectedDistance || '1'; // Use selected or default to '1'
-
-      form.appendChild(sessionField);
-      form.appendChild(locationField);
-      form.appendChild(distanceField);
-
-      document.body.appendChild(form);
-      form.submit();
-  }
-
-  let sessionsData = [];
-
-function loadSessionData() {
-  fetch('static/session.json')
-    .then(response => response.json())
-    .then(data => {
-      sessionsData = data;
-      sortSessions('date', 'desc'); // Default sort by date descending
-      renderSessions();
-    })
-    .catch(error => {
-      console.error('Error loading session data:', error);
-    });
+    function goBack() {
+  window.location.href = '/visualize';
 }
 
-function sortSessions(sortBy, order = 'desc') {
-  sessionsData.sort(function (a, b) {
-    let comparison = 0;
-    if (sortBy === 'date') {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      comparison = dateA - dateB;
-    } else if (sortBy === 'precision') {
-      comparison = a.avg_precision - b.avg_precision;
-    } else if (sortBy === 'height') {
-      comparison = a.avg_height - b.avg_height;
-    } else if (sortBy === 'fg_percentage') {
-      comparison = a.fg_percentage - b.fg_percentage;
-    }
-    return order === 'asc' ? comparison : -comparison;
-  });
-}
 
-function renderSessions() {
-  const sessionsContainer = document.getElementById('sessionsContainer');
-  sessionsContainer.innerHTML = ''; // Clear existing sessions
-
-  sessionsData.forEach((session, index) => {
-    const sessionBox = document.createElement('div');
-    sessionBox.className = 'session-box';
-
-    // Session Title
-    const sessionTitle = `
-      <div class="session-title">${session?.session} - ${session.date}</div>`;
-    sessionBox.innerHTML = sessionTitle;
-
-    const data_container = document.createElement('div');
-    data_container.className = 'stat-container';
-
-    // FG% Pie Chart
-    const pieChartContainer = document.createElement('div');
-    pieChartContainer.className = 'pie-chart-container';
-
-    const pieChart = document.createElement('div');
-    pieChart.className = 'pie-chart';
-    pieChart.style.setProperty('--percentage', session.fg_percentage);
-
-    const pieText = document.createElement('div');
-    pieText.className = 'inner-html';
-    pieText.innerHTML = `<div class="stat-title">${session.fg_percentage.toFixed(2)}%</div>
-    <div class="stat-value">${session.fg_makes}/${session.fg_attempts}</div>`;
-    pieChartContainer.appendChild(pieChart);
-    pieChartContainer.appendChild(pieText);
-
-    // Average Precision card
-    const precisionCard = document.createElement('div');
-    precisionCard.className = 'stat-card';
-    precisionCard.innerHTML = `
-      <div class="stat-title">Average Precision</div>
-      <div class="stat-value">±${session.avg_precision.toFixed(2)}</div>`;
-
-    // Average Height card
-    const heightCard = document.createElement('div');
-    heightCard.className = 'stat-card';
-    heightCard.innerHTML = `
-      <div class="stat-title">Average Height</div>
-      <div class="stat-value">${session.avg_height.toFixed(2)}</div>`;
-
-    // Append all the cards to the data container
-    data_container.appendChild(pieChartContainer);
-    data_container.appendChild(precisionCard);
-    data_container.appendChild(heightCard);
-
-    sessionBox.appendChild(data_container);
-    // Append the session box to the container
-    sessionsContainer.appendChild(sessionBox);
-
-    sessionBox.addEventListener('click', function () {
-      submitSessionForm(session.session); // Pass the session index
-    });
-  });
-}
-
-document.getElementById('sortOptions').addEventListener('change', function () {
-  const sortBy = this.value;
-  let order = 'desc'; // Default to descending
-
-  if (sortBy === 'date') {
-    order = 'desc'; // Latest dates first
-  } else if (sortBy === 'precision') {
-    order = 'asc';
-  } else {
-    order = 'desc'; // Highest values first
-  }
-
-  sortSessions(sortBy, order);
-  renderSessions();
-});
 
 document.addEventListener('DOMContentLoaded', loadSessionData);
 

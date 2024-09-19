@@ -12,23 +12,21 @@ visualize = Blueprint("visualize", __name__, static_folder="static", template_fo
 def submit_form():
   if request.method == 'POST':
 
-    session_index = request.form.get('session_index', None)
+    session_name = request.form.get('session_name', None)
     location_choice = request.form.get('location_choice', "1")
     distance_choice = request.form.get('distance_choice', "1")
 
 
     # Handles visualization for the specific session
-    if session_index is not None:
-        session_index = int(session_index)
+    if session_name is not None:
+        
 
         with open('Kicking Code/website/static/session.json', 'r') as f:
             sessions_data = json.load(f)
-      
-        session = sessions_data[session_index]
-        attempts = session['kicks']
 
-    else:
-        attempts = _data.get_all_data()
+        session = next((s for s in sessions_data if s['session'] == session_name), None)
+        
+        attempts = session['kicks']
 
 
     # Now, regardless of whether attempts are from a session or all data, we can proceed to apply filters
@@ -381,7 +379,7 @@ def submit_form():
     plt.plot()
     plt.savefig('Kicking Code/website/static/chart.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
     
-    return render_template('visualize.html', get_plot = True, plot_url='static/chart.png', attempts = attempts)
+    return render_template('visualize_session.html', get_plot = True, plot_url='static/chart.png', attempts = attempts)
     
   else:
       return render_template('visualize.html')
