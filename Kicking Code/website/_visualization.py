@@ -457,7 +457,7 @@ def submit_form():
 
         # Plot Generation
 
-        fig, ax = plt.subplots(figsize=(13, 10))
+        fig, ax = plt.subplots(figsize=(11, 10))
         plt.axis('off')
       
         # Field plot
