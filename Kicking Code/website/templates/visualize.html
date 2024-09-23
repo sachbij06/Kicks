@@ -122,6 +122,15 @@
   gap: 25px;
 }
 
+.title-wrap{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin-top: 30px;
+}
+
 /* Pie chart container */
 .pie-chart-container {
   position: relative;
@@ -189,7 +198,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 }
 
 /* Total Stat Cards Container */
@@ -337,12 +346,19 @@
 
 /* Sort Dropdown Styles */
 .sort-dropdown {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
   text-align: center;
+
 }
 
 .sort-dropdown label {
-  margin-right: 10px;
+  margin-left: 50px;
   font-size: 18px;
 }
 
@@ -441,7 +457,6 @@
 
     label {
       display: block;
-      margin-bottom: 8px;
       color: #ffffff;
     }
 
@@ -625,6 +640,7 @@
 
 
   <div class="content">
+    <button onclick="submitSessionForm('')">Display All Data</button>
 
     <div class="total-stats-container">
       <div class="total-stat-cards">
@@ -634,9 +650,12 @@
         <img id="dynamicImage" src="{{ plot_url }}" alt="Visualization" style="display: none;">
       </div>
     </div>
-
+<hr>
     <div class="header-container">
-      <h1>Field Goal Sessions</h1>
+      
+<div class = title-wrap>
+  <h1>Session Data</h1>
+  
       <div class="sort-dropdown">
         <label for="sortOptions">Sort By:</label>
         <select id="sortOptions">
@@ -645,6 +664,7 @@
           <option value="height">Height</option>
           <option value="fg_percentage">FG%</option>
         </select>
+        </div>
       </div>  
     
     <div class="sessions-container" id="sessionsContainer"></div>
@@ -862,22 +882,30 @@ function computeTotalStats() {
   let totalFGAttempts = 0;
   let totalPrecisionSum = 0;
   let totalHeightSum = 0;
+  let absPrecisionSum = 0;
   let sessionCount = sessionsData.length;
 
   sessionsData.forEach(session => {
     totalFGMakes += session.fg_makes;
     totalFGAttempts += session.fg_attempts;
-    totalPrecisionSum += session.avg_precision;
-    totalHeightSum += session.avg_height;
+    session.kicks.forEach(kick => {
+        const precision = kick[4][0];
+        const height = kick[4][1];
+        totalPrecisionSum += Math.abs(precision);
+        absPrecisionSum += precision;
+        totalHeightSum += height;
+    });
   });
 
   let fgPercentage = (totalFGMakes / totalFGAttempts) * 100;
-  let avgPrecision = totalPrecisionSum / sessionCount;
-  let avgHeight = totalHeightSum / sessionCount;
+  let avgPrecision = totalPrecisionSum / totalFGAttempts;
+  let directionalBias = absPrecisionSum / totalFGAttempts;
+  let avgHeight = totalHeightSum / totalFGAttempts;
 
   return {
     fgPercentage: fgPercentage,
     avgPrecision: avgPrecision,
+    directionalBias: directionalBias,
     avgHeight: avgHeight,
     totalFGMakes: totalFGMakes,
     totalFGAttempts: totalFGAttempts
@@ -911,8 +939,14 @@ function renderTotalStats() {
   const precisionCard = document.createElement('div');
   precisionCard.className = 'total-stat-card';
   precisionCard.innerHTML = `
-    <div class="total-stat-title">Average Precision</div>
-    <div class="total-stat-value">±${totalStats.avgPrecision.toFixed(2)}</div>`;
+    <div class="total-stat-title">Precision</div>
+    <div class="total-stat-value">±${totalStats.avgPrecision.toFixed(2)}</div>    `;
+
+  const directionalCard = document.createElement('div')
+  directionalCard.className = 'total-stat-card';
+  directionalCard.innerHTML = `
+    <div class="total-stat-title">Directional Bias</div>
+    <div class="total-stat-value">${totalStats.directionalBias.toFixed(2)}</div>    `;
 
   // Average Height Card
   const heightCard = document.createElement('div');
@@ -924,6 +958,7 @@ function renderTotalStats() {
   // Append all the cards to the statCardsContainer
   statCardsContainer.appendChild(pieChartContainer);
   statCardsContainer.appendChild(precisionCard);
+  statCardsContainer.appendChild(directionalCard);
   statCardsContainer.appendChild(heightCard);
 }
 
