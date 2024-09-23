@@ -27,6 +27,8 @@ def submit_form():
         session = next((s for s in sessions_data if s['session'] == session_name), None)
         
         attempts = session['kicks']
+    else:
+       attempts = _data.get_all_data()
 
 
     # Now, regardless of whether attempts are from a session or all data, we can proceed to apply filters
