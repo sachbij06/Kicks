@@ -122,6 +122,15 @@
   gap: 25px;
 }
 
+.title-wrap{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin-top: 30px;
+}
+
 /* Pie chart container */
 .pie-chart-container {
   position: relative;
@@ -181,6 +190,96 @@
 .stat-value {
   font-size: 18px;   /* Reduced font size */
   font-weight: bold;
+}
+
+/* Total Stats Container */
+.total-stats-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+/* Total Stat Cards Container */
+.total-stat-cards {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+}
+
+/* Visualization Container */
+.visualization {
+  flex: 3;
+  display: flex;
+  justify-content: center;
+}
+
+.visualization img {
+  max-width: 100%;
+  height: auto;
+  border: 3px solid #acacac;
+  border-radius: 10px;
+}
+
+/* Total Stat Card Styles */
+.total-stat-card {
+  background-color: #302f2f;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0;
+  text-align: center;
+  width: 200px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.total-stat-title {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.total-stat-value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Total Pie Chart Styles */
+.total-pie-chart-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.total-pie-chart {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    #4caf50 0% calc(var(--percentage) * 1%),
+    #f44336 calc(var(--percentage) * 1%) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.total-inner-html {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
 }
 
 
@@ -247,12 +346,19 @@
 
 /* Sort Dropdown Styles */
 .sort-dropdown {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
   text-align: center;
+
 }
 
 .sort-dropdown label {
-  margin-right: 10px;
+  margin-left: 50px;
   font-size: 18px;
 }
 
@@ -351,7 +457,6 @@
 
     label {
       display: block;
-      margin-bottom: 8px;
       color: #ffffff;
     }
 
@@ -478,14 +583,12 @@
   
   <!-- Left Sidebar -->
   <div class="sidebar" id="mySidebar">
-    <button onclick="toggleDropdown('fieldGoalDropdown')">Field Goal     ▼</button>
-    <div id="fieldGoalDropdown" class="dropdown-content" style="display: block;">
-      <button onclick="resetStats()">All Sessions</button> <!-- Resets to the overall stats -->
+    <button onclick="toggleDropdown('fieldGoalDropdown')">Field Goal</button>
+    <div id="fieldGoalDropdown" class="dropdown-content">
       <button>AI Insights</button>
     </div>
     <button onclick="toggleDropdown('kickoffDropdown')">Kickoff - Coming Soon</button>
     <div id="kickoffDropdown" class="dropdown-content">
-      <button>Basic Stats</button>
       <button>AI Insights</button>
     </div>
   </div>
@@ -537,8 +640,22 @@
 
 
   <div class="content">
+    <button onclick="submitSessionForm('')">Display All Data</button>
+
+    <div class="total-stats-container">
+      <div class="total-stat-cards">
+        <!-- Total stat cards will be dynamically inserted here -->
+      </div>
+      <div class="visualization">
+        <img id="dynamicImage" src="{{ plot_url }}" alt="Visualization" style="display: none;">
+      </div>
+    </div>
+<hr>
     <div class="header-container">
-      <h1>Field Goal Sessions</h1>
+      
+<div class = title-wrap>
+  <h1>Session Data</h1>
+  
       <div class="sort-dropdown">
         <label for="sortOptions">Sort By:</label>
         <select id="sortOptions">
@@ -547,14 +664,11 @@
           <option value="height">Height</option>
           <option value="fg_percentage">FG%</option>
         </select>
+        </div>
       </div>  
     
     <div class="sessions-container" id="sessionsContainer"></div>
   </div>
-
-  <div class="gray-box">
-    <img id="dynamicImage" src="{{ plot_url }}" alt="Image not available" style="display: none;">
-</div>
 
 
 
@@ -579,30 +693,6 @@
       } else if (type === 'distance') {
         selectedDistance = value;
       }
-    }
-
-
-    // Reset stats (basic stats)
-    function resetStats() {
-
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = '/visualize';
-
-      const locationField = document.createElement('input');
-      locationField.type = 'hidden';
-      locationField.name = 'location_choice';
-      locationField.value = 1;  // Reset to all locations
-
-      const distanceField = document.createElement('input');
-      distanceField.type = 'hidden';
-      distanceField.name = 'distance_choice';
-      distanceField.value = 1;  // Reset to all distances
-
-      form.appendChild(locationField);
-      form.appendChild(distanceField);
-      document.body.appendChild(form);
-      form.submit();
     }
 
 
@@ -658,17 +748,17 @@
       const sessionField = document.createElement('input');
       sessionField.type = 'hidden';
       sessionField.name = 'session_name';
-      sessionField.value = sessionName; // Index of the session
+      sessionField.value = sessionName; // Index of the session (ADD SOMETHING HERE THAT SENDS A SESSION VALUE OF ALL OR ADD ANOTHER VARIABLE THAT GETS SENT THAT SAYS ALL)
 
       const locationField = document.createElement('input');
       locationField.type = 'hidden';
       locationField.name = 'location_choice';
-      locationField.value = selectedLocation || '1'; // Use selected or default to '1'
+      locationField.value = '1'; // Use selected or default to '1'
 
       const distanceField = document.createElement('input');
       distanceField.type = 'hidden';
       distanceField.name = 'distance_choice';
-      distanceField.value = selectedDistance || '1'; // Use selected or default to '1'
+      distanceField.value = '1'; // Use selected or default to '1'
 
       form.appendChild(sessionField);
       form.appendChild(locationField);
@@ -685,7 +775,7 @@ function loadSessionData() {
     .then(response => response.json())
     .then(data => {
       sessionsData = data;
-      sortSessions('date', 'desc'); // Default sort by date descending
+      sortSessions('date', 'asc'); // Default sort by date descending
       renderSessions();
     })
     .catch(error => {
@@ -693,7 +783,7 @@ function loadSessionData() {
     });
 }
 
-function sortSessions(sortBy, order = 'desc') {
+function sortSessions(sortBy, order = 'asc') {
   sessionsData.sort(function (a, b) {
     let comparison = 0;
     if (sortBy === 'date') {
@@ -786,6 +876,107 @@ document.getElementById('sortOptions').addEventListener('change', function () {
   sortSessions(sortBy, order);
   renderSessions();
 });
+
+function computeTotalStats() {
+  let totalFGMakes = 0;
+  let totalFGAttempts = 0;
+  let totalPrecisionSum = 0;
+  let totalHeightSum = 0;
+  let absPrecisionSum = 0;
+  let sessionCount = sessionsData.length;
+
+  sessionsData.forEach(session => {
+    totalFGMakes += session.fg_makes;
+    totalFGAttempts += session.fg_attempts;
+    session.kicks.forEach(kick => {
+        const precision = kick[4][0];
+        const height = kick[4][1];
+        totalPrecisionSum += Math.abs(precision);
+        absPrecisionSum += precision;
+        totalHeightSum += height;
+    });
+  });
+
+  let fgPercentage = (totalFGMakes / totalFGAttempts) * 100;
+  let avgPrecision = totalPrecisionSum / totalFGAttempts;
+  let directionalBias = absPrecisionSum / totalFGAttempts;
+  let avgHeight = totalHeightSum / totalFGAttempts;
+
+  return {
+    fgPercentage: fgPercentage,
+    avgPrecision: avgPrecision,
+    directionalBias: directionalBias,
+    avgHeight: avgHeight,
+    totalFGMakes: totalFGMakes,
+    totalFGAttempts: totalFGAttempts
+  };
+}
+
+function renderTotalStats() {
+  const totalStats = computeTotalStats();
+
+  // Update the stat cards in the total-stats-container
+  const statCardsContainer = document.querySelector('.total-stat-cards');
+  statCardsContainer.innerHTML = ''; // Clear existing content if any
+
+  // FG% Pie Chart
+  const pieChartContainer = document.createElement('div');
+  pieChartContainer.className = 'total-pie-chart-container';
+
+  const pieChart = document.createElement('div');
+  pieChart.className = 'total-pie-chart';
+  pieChart.style.setProperty('--percentage', totalStats.fgPercentage);
+
+  const pieText = document.createElement('div');
+  pieText.className = 'total-inner-html';
+  pieText.innerHTML = `
+    <div class="total-stat-title">${totalStats.fgPercentage.toFixed(2)}%</div>
+    <div class="total-stat-value">${totalStats.totalFGMakes}/${totalStats.totalFGAttempts}</div>`;
+  pieChartContainer.appendChild(pieChart);
+  pieChartContainer.appendChild(pieText);
+
+  // Average Precision Card
+  const precisionCard = document.createElement('div');
+  precisionCard.className = 'total-stat-card';
+  precisionCard.innerHTML = `
+    <div class="total-stat-title">Precision</div>
+    <div class="total-stat-value">±${totalStats.avgPrecision.toFixed(2)}</div>    `;
+
+  const directionalCard = document.createElement('div')
+  directionalCard.className = 'total-stat-card';
+  directionalCard.innerHTML = `
+    <div class="total-stat-title">Directional Bias</div>
+    <div class="total-stat-value">${totalStats.directionalBias.toFixed(2)}</div>    `;
+
+  // Average Height Card
+  const heightCard = document.createElement('div');
+  heightCard.className = 'total-stat-card';
+  heightCard.innerHTML = `
+    <div class="total-stat-title">Average Height</div>
+    <div class="total-stat-value">${totalStats.avgHeight.toFixed(2)}</div>`;
+
+  // Append all the cards to the statCardsContainer
+  statCardsContainer.appendChild(pieChartContainer);
+  statCardsContainer.appendChild(precisionCard);
+  statCardsContainer.appendChild(directionalCard);
+  statCardsContainer.appendChild(heightCard);
+}
+
+// Ensure that renderTotalStats() is called after loading session data
+function loadSessionData() {
+  fetch('static/session.json')
+    .then(response => response.json())
+    .then(data => {
+      sessionsData = data;
+      sortSessions('date', 'asc'); // Default sort by date descending
+      renderTotalStats(); // Render total stats
+      renderSessions();   // Render individual sessions
+    })
+    .catch(error => {
+      console.error('Error loading session data:', error);
+    });
+}
+
 
 document.addEventListener('DOMContentLoaded', loadSessionData);
 
