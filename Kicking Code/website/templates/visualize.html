@@ -648,7 +648,12 @@
       </div>
       <div class="visualization">
         <img id="dynamicImage" src="{{ plot_url }}" alt="Visualization" style="display: none;">
-        <img id="dynamicChart" src="{{ chart_url }}" alt="Chart" style="display: block">
+      </div>
+    </div>
+
+    <div class="total-stats-container">
+      <div class="visualization">
+        <img id="dynamicChart" src="{{ chart_url }}" alt="FG% Chart" style="display: none;">
       </div>
     </div>
 <hr>
@@ -679,6 +684,10 @@
 
     const img = document.getElementById("dynamicImage");
     const defaultText = document.getElementById("defaultText");
+
+    
+    const img2 = document.getElementById("dynamicChart");
+    const defaultText2 = document.getElementById("defaultText2");
 
 
     // Function to handle both location and distance selection
@@ -739,6 +748,12 @@
         img.style.display = "block";
         defaultText.style.display = "none";
     };
+
+    img2.onload = function(){
+      img2.style.display = "block";
+      defaultText2.style.display = "none";
+
+    }
 
 
     function submitSessionForm(sessionName) {

@@ -3,6 +3,8 @@ import _data, math
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import json  # Import json module to read session data
+from datetime import datetime, timedelta
+import matplotlib.dates as mdates
 
 app = Flask(__name__)
 visualize = Blueprint("visualize", __name__, static_folder="static", template_folder="templates")
@@ -716,9 +718,52 @@ def submit_form():
           
         plt.plot()
         plt.savefig('Kicking Code/website/static/chart.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
-        
-        return render_template('visualize.html', get_plot = True, plot_url='static/chart.png', attempts = attempts)
 
+      
+        with open('Kicking Code/website/static/session.json', 'r') as f:
+            sessions_data = json.load(f)
+
+                # Convert date strings to datetime objects and extract fg_percentages
+        dates = [datetime.strptime(session['date'], '%Y-%m-%d') for session in sessions_data]
+        fg_percentages = [session['fg_percentage'] for session in sessions_data]
+
+        # Sort the data by date
+        combined = sorted(zip(dates, fg_percentages), key=lambda x: x[0])
+        dates, fg_percentages = zip(*combined)
+
+        # Create the plot
+        plt.figure(figsize=(10, 6))
+
+        # Plot the data using plot_date to handle dates correctly
+        plt.plot_date(dates, fg_percentages, marker='o', linestyle='-', color='blue')
+
+        # Set the x-axis to use dates
+        plt.gca().xaxis_date()
+
+        # Use AutoDateLocator and ConciseDateFormatter for better date representation
+        locator = mdates.AutoDateLocator()
+        formatter = mdates.ConciseDateFormatter(locator)
+        plt.gca().xaxis.set_major_locator(locator)
+        plt.gca().xaxis.set_major_formatter(formatter)
+
+        # Rotate and align the x labels for better readability
+        plt.gcf().autofmt_xdate()
+
+        # Add labels and title
+        plt.xlabel('Date')
+        plt.ylabel('FG%')
+        plt.title('FG% Over Time')
+
+        # Add grid lines for better visualization
+        plt.grid(True)
+
+        # Adjust layout and save the plot
+        plt.tight_layout()
+        plt.savefig('Kicking Code/website/static/chart_image.png', bbox_inches='tight', pad_inches=0.1)
+        plt.close()
+
+        # Render the template with the correct image path
+        return render_template('visualize.html', get_plot=True, plot_url='static/chart.png', chart_url = 'static/chart_image.png', attempts=attempts)
 
   else:
       return render_template('visualize.html')
