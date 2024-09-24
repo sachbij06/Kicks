@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import json  # Import json module to read session data
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
+import matplotlib
+matplotlib.use('Agg')
 
 app = Flask(__name__)
 visualize = Blueprint("visualize", __name__, static_folder="static", template_folder="templates")
@@ -20,7 +22,7 @@ def submit_form():
 
 
     # Handles visualization for the specific session
-    if session_name != "":
+    if session_name != "" or session_name is None:
       with open('Kicking Code/website/static/session.json', 'r') as f:
         sessions_data = json.load(f)
 
@@ -718,44 +720,84 @@ def submit_form():
           
         plt.plot()
         plt.savefig('Kicking Code/website/static/chart.png', format='png', bbox_inches='tight', pad_inches = -0.6, transparent=True, edgecolor='none')
-
+        plt.close()
       
         with open('Kicking Code/website/static/session.json', 'r') as f:
             sessions_data = json.load(f)
 
+        metric = request.form.get('metric')
+
+        if metric == 'fg_percentage':
+          values = [session['fg_percentage'] for session in sessions_data]
+          ylabel = 'FG%'
+          title = 'FG% Over Time'
+        elif metric == 'precision':
+          values = [session['avg_precision'] for session in sessions_data]
+          ylabel = 'Precision'
+          title = 'Precision Over Time'
+        elif metric == 'height':
+          values = [session['avg_height'] for session in sessions_data]
+          ylabel = 'Height'
+          title = 'Height Over Time'
+        else:
+          values = [session['fg_percentage'] for session in sessions_data]
+          ylabel = 'FG%'
+          title = 'FG% Over Time'
+           
+    
+
                 # Convert date strings to datetime objects and extract fg_percentages
         dates = [datetime.strptime(session['date'], '%Y-%m-%d') for session in sessions_data]
-        fg_percentages = [session['fg_percentage'] for session in sessions_data]
 
         # Sort the data by date
-        combined = sorted(zip(dates, fg_percentages), key=lambda x: x[0])
-        dates, fg_percentages = zip(*combined)
+        combined = sorted(zip(dates, values), key=lambda x: x[0])
+        dates, values = zip(*combined)
 
-        # Create the plot
-        plt.figure(figsize=(10, 6))
+        # Create the plot with a black background
+        fig, ax = plt.subplots(figsize=(10, 6))
+        fig.patch.set_facecolor('black')  # Set the background color of the figure
+        ax.set_facecolor('black')  # Set the background color of the plot area
 
         # Plot the data using plot_date to handle dates correctly
-        plt.plot_date(dates, fg_percentages, marker='o', linestyle='-', color='blue')
+        ax.plot_date(dates, values, marker='o', linestyle='-', color='blue')  # Line color is blue
 
         # Set the x-axis to use dates
-        plt.gca().xaxis_date()
+        ax.xaxis_date()
 
         # Use AutoDateLocator and ConciseDateFormatter for better date representation
         locator = mdates.AutoDateLocator()
         formatter = mdates.ConciseDateFormatter(locator)
-        plt.gca().xaxis.set_major_locator(locator)
-        plt.gca().xaxis.set_major_formatter(formatter)
+        ax.xaxis.set_major_locator(locator)
+        ax.xaxis.set_major_formatter(formatter)
 
         # Rotate and align the x labels for better readability
         plt.gcf().autofmt_xdate()
 
-        # Add labels and title
-        plt.xlabel('Date')
-        plt.ylabel('FG%')
-        plt.title('FG% Over Time')
+        ymin, ymax = ax.get_ylim()  # Get the current y-axis limits
+        y_range = ymax - ymin
 
-        # Add grid lines for better visualization
-        plt.grid(True)
+        if metric == 'precision':
+           ax.set_ylim([0, ymax + y_range * 0.4])  # Ground ymin to 0 for precision
+        else:
+           ax.set_ylim([ymin - y_range * 0.4, ymax + y_range * 0.4])  # Zoom out by 25%
+
+        # Customize the plot aesthetics
+        ax.spines['top'].set_color('black')    # Top spine color (disappears into the black background)
+        ax.spines['right'].set_color('black')  # Right spine color (disappears into the black background)
+        ax.spines['left'].set_color('white')   # Left spine color
+        ax.spines['bottom'].set_color('white') # Bottom spine color
+        ax.xaxis.label.set_color('white')      # X-axis label color
+        ax.yaxis.label.set_color('white')      # Y-axis label color
+        ax.tick_params(axis='x', colors='white')  # X-axis tick color
+        ax.tick_params(axis='y', colors='white')  # Y-axis tick color
+
+        # Add labels and title (white text)
+        ax.set_xlabel('Date', fontsize=14, color='white')
+        ax.set_ylabel(ylabel, fontsize=14, color='white')
+        ax.set_title(title, fontsize=16, color='white')
+
+        # Add grid lines (white grid for better visibility on black background)
+        ax.grid(True, color='white', linestyle='--', linewidth=0.2)
 
         # Adjust layout and save the plot
         plt.tight_layout()
@@ -763,8 +805,9 @@ def submit_form():
         plt.close()
 
         # Render the template with the correct image path
-        return render_template('visualize.html', get_plot=True, plot_url='static/chart.png', chart_url = 'static/chart_image.png', attempts=attempts)
-
+        pass
+        return render_template('visualize.html', get_plot=True, metric=metric, plot_url='static/chart.png', chart_url = 'static/chart_image.png', attempts=attempts)
+        
   else:
       return render_template('visualize.html')
   
