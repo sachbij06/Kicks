@@ -725,8 +725,6 @@ def submit_form():
         with open('Kicking Code/website/static/session.json', 'r') as f:
             sessions_data = json.load(f)
 
-<<<<<<< HEAD
-=======
         metric = request.form.get('metric')
 
         if metric == 'fg_percentage':
@@ -749,7 +747,6 @@ def submit_form():
     
 
                 # Convert date strings to datetime objects and extract fg_percentages
->>>>>>> d1b0f498cc67dae62c34206aa635a50a8990cabc
         dates = [datetime.strptime(session['date'], '%Y-%m-%d') for session in sessions_data]
 
         # Sort the data by date
@@ -762,11 +759,7 @@ def submit_form():
         ax.set_facecolor('black')  # Set the background color of the plot area
 
         # Plot the data using plot_date to handle dates correctly
-<<<<<<< HEAD
-        ax.plot_date(dates, fg_percentages, marker='o', linestyle='-', color='blue')  # Line color is blue
-=======
         ax.plot_date(dates, values, marker='o', linestyle='-', color='blue')  # Line color is blue
->>>>>>> d1b0f498cc67dae62c34206aa635a50a8990cabc
 
         # Set the x-axis to use dates
         ax.xaxis_date()
@@ -780,25 +773,6 @@ def submit_form():
         # Rotate and align the x labels for better readability
         plt.gcf().autofmt_xdate()
 
-<<<<<<< HEAD
-        # Customize the plot aesthetics
-        ax.spines['top'].set_color('black')    # Top spine color (disappears into the black background)
-        ax.spines['right'].set_color('black')  # Right spine color (disappears into the black background)
-        ax.spines['left'].set_color('white')   # Left spine color
-        ax.spines['bottom'].set_color('white') # Bottom spine color
-        ax.xaxis.label.set_color('white')      # X-axis label color
-        ax.yaxis.label.set_color('white')      # Y-axis label color
-        ax.tick_params(axis='x', colors='white')  # X-axis tick color
-        ax.tick_params(axis='y', colors='white')  # Y-axis tick color
-
-        # Add labels and title (white text)
-        ax.set_xlabel('Date', color='white')
-        ax.set_ylabel('FG%', color='white')
-        ax.set_title('FG% Over Time', color='white')
-
-        # Add grid lines (white grid for better visibility on black background)
-        ax.grid(True, color='white', linestyle='--', linewidth=0.5)
-=======
         ymin, ymax = ax.get_ylim()  # Get the current y-axis limits
         y_range = ymax - ymin
 
@@ -824,7 +798,6 @@ def submit_form():
 
         # Add grid lines (white grid for better visibility on black background)
         ax.grid(True, color='white', linestyle='--', linewidth=0.2)
->>>>>>> d1b0f498cc67dae62c34206aa635a50a8990cabc
 
         # Adjust layout and save the plot
         plt.tight_layout()
