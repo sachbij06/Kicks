@@ -651,6 +651,15 @@
       </div>
     </div>
 
+    <div class="metric-dropdown">
+      <label for="metricOptions">Select Metric:</label>
+      <select id="metricOptions" onchange="submitMetricForm()">
+        <option value="fg_percentage">FG%</option>
+        <option value="precision">Precision</option>
+        <option value="height">Height</option>
+      </select>
+    </div>
+
     <div class="total-stats-container">
       <div class="visualization">
         <img id="dynamicChart" src="{{ chart_url }}" alt="FG% Chart" style="display: none;">
@@ -755,8 +764,16 @@
 
     }
 
+    const selectedMetric = "{{ metric }}";  // This will be passed from Flask
+    document.getElementById('metricOptions').value = selectedMetric;  // Set the value to the selected metric
 
-    function submitSessionForm(sessionName) {
+    // Function to submit the form when metric is selected
+    function submitMetricForm() {
+        const selectedMetric = document.getElementById('metricOptions').value;
+        submitSessionForm('', selectedMetric);  // Call the submitSessionForm with the selected metric
+    }
+
+    function submitSessionForm(sessionName, metric) {
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = '/visualize';
@@ -776,9 +793,15 @@
       distanceField.name = 'distance_choice';
       distanceField.value = '1'; // Use selected or default to '1'
 
+      const metricField = document.createElement('input');
+      metricField.type = 'hidden';
+      metricField.name = 'metric';
+      metricField.value = metric;
+
       form.appendChild(sessionField);
       form.appendChild(locationField);
       form.appendChild(distanceField);
+      form.appendChild(metricField);
 
       document.body.appendChild(form);
       form.submit();
