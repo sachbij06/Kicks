@@ -723,7 +723,6 @@ def submit_form():
         with open('Kicking Code/website/static/session.json', 'r') as f:
             sessions_data = json.load(f)
 
-                # Convert date strings to datetime objects and extract fg_percentages
         dates = [datetime.strptime(session['date'], '%Y-%m-%d') for session in sessions_data]
         fg_percentages = [session['fg_percentage'] for session in sessions_data]
 
@@ -731,31 +730,43 @@ def submit_form():
         combined = sorted(zip(dates, fg_percentages), key=lambda x: x[0])
         dates, fg_percentages = zip(*combined)
 
-        # Create the plot
-        plt.figure(figsize=(10, 6))
+        # Create the plot with a black background
+        fig, ax = plt.subplots(figsize=(10, 6))
+        fig.patch.set_facecolor('black')  # Set the background color of the figure
+        ax.set_facecolor('black')  # Set the background color of the plot area
 
         # Plot the data using plot_date to handle dates correctly
-        plt.plot_date(dates, fg_percentages, marker='o', linestyle='-', color='blue')
+        ax.plot_date(dates, fg_percentages, marker='o', linestyle='-', color='blue')  # Line color is blue
 
         # Set the x-axis to use dates
-        plt.gca().xaxis_date()
+        ax.xaxis_date()
 
         # Use AutoDateLocator and ConciseDateFormatter for better date representation
         locator = mdates.AutoDateLocator()
         formatter = mdates.ConciseDateFormatter(locator)
-        plt.gca().xaxis.set_major_locator(locator)
-        plt.gca().xaxis.set_major_formatter(formatter)
+        ax.xaxis.set_major_locator(locator)
+        ax.xaxis.set_major_formatter(formatter)
 
         # Rotate and align the x labels for better readability
         plt.gcf().autofmt_xdate()
 
-        # Add labels and title
-        plt.xlabel('Date')
-        plt.ylabel('FG%')
-        plt.title('FG% Over Time')
+        # Customize the plot aesthetics
+        ax.spines['top'].set_color('black')    # Top spine color (disappears into the black background)
+        ax.spines['right'].set_color('black')  # Right spine color (disappears into the black background)
+        ax.spines['left'].set_color('white')   # Left spine color
+        ax.spines['bottom'].set_color('white') # Bottom spine color
+        ax.xaxis.label.set_color('white')      # X-axis label color
+        ax.yaxis.label.set_color('white')      # Y-axis label color
+        ax.tick_params(axis='x', colors='white')  # X-axis tick color
+        ax.tick_params(axis='y', colors='white')  # Y-axis tick color
 
-        # Add grid lines for better visualization
-        plt.grid(True)
+        # Add labels and title (white text)
+        ax.set_xlabel('Date', color='white')
+        ax.set_ylabel('FG%', color='white')
+        ax.set_title('FG% Over Time', color='white')
+
+        # Add grid lines (white grid for better visibility on black background)
+        ax.grid(True, color='white', linestyle='--', linewidth=0.5)
 
         # Adjust layout and save the plot
         plt.tight_layout()
